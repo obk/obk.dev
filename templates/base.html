@@ -1,0 +1,27 @@
+{{define "base"}}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Title}}</title>
+<link rel="preload" href="/fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/site.css">
+<link rel="icon" href="/images/favicon.ico">
+<link rel="alternate" type="application/rss+xml" title="obk" href="/feed.xml">
+<meta property="og:title" content="{{.Title}}">
+{{if .Description}}<meta name="description" content="{{.Description}}">
+<meta property="og:description" content="{{.Description}}">
+{{end}}<meta property="og:site_name" content="obk">
+</head>
+<body>
+{{block "toc-state" .}}{{end}}<div class="page{{block "page-class" .}}{{end}}">
+<header class="site">
+<a class="name" href="/">obk</a>
+{{block "toc-toggle" .}}{{end}}</header>
+<main>
+{{template "main" .}}
+</main>
+</div>
+</body>
+</html>
+{{end}}

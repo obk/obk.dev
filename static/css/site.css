@@ -1,0 +1,702 @@
+/* ==========================================================================
+   Fonts, self-hosted from static/fonts/ (both OFL).
+   Newsreader: variable (weight + optical size), for all text.
+   IBM Plex Mono: 400 and 600, for code.
+   Each face is split into latin and latin-ext so only what's used loads.
+   ========================================================================== */
+
+@font-face {
+  font-family: Newsreader;
+  src: url("/fonts/newsreader-latin-opsz-normal.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: Newsreader;
+  src: url("/fonts/newsreader-latin-ext-opsz-normal.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: Newsreader;
+  src: url("/fonts/newsreader-latin-opsz-italic.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: Newsreader;
+  src: url("/fonts/newsreader-latin-ext-opsz-italic.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/ibm-plex-mono-latin-ext-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/ibm-plex-mono-latin-600-normal.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/ibm-plex-mono-latin-ext-600-normal.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+
+/* ==========================================================================
+   Colors. Warm paper and ink, after darioamodei.com.
+   Dark mode follows the OS; there is no toggle.
+   ========================================================================== */
+
+:root {
+  --bg: #f0eee6; /* ivory paper */
+  --fg: #1f1e1d; /* slate ink */
+  --muted: #5e5d59; /* dates, notes, hover */
+  --border: #d1cfc5; /* rules, quote bar */
+  --tint: #00000014; /* code and note-marker backgrounds */
+  --tint-hover: #00000026;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1f1e1d;
+    --fg: #f0eee6;
+    --muted: #b0aea5;
+    --border: #5e5d59;
+    --tint: #ffffff1a;
+    --tint-hover: #ffffff2e;
+    color-scheme: dark;
+  }
+
+  /* Light text on dark reads heavier; thin the variable weight to match. */
+  body {
+    font-weight: 370;
+  }
+
+  /* SVGs loaded via <img> can't inherit currentColor, so flip them. */
+  img[src$=".svg"] {
+    filter: invert(1);
+  }
+}
+
+
+/* ==========================================================================
+   Base: page, header, type, links, lists.
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font:
+    400 1.25rem/1.6 Newsreader,
+    "Times New Roman",
+    serif;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  counter-reset: sn; /* sidenote numbers */
+}
+
+::selection {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* --- Page column ---------------------------------------------------------- */
+
+.page {
+  max-width: 38.75rem;
+  margin: 0 auto;
+  padding: 0 20px 6rem;
+}
+
+/* Posts get a wider column for reading. */
+.page.wide {
+  max-width: 50rem;
+}
+
+/* --- Header: just the site name ------------------------------------------- */
+
+header.site {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 15px 0 25px;
+  padding: 15px 0 10px;
+}
+
+header.site .name {
+  margin-right: auto;
+  font-size: 1.44em;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+}
+
+header.site .name:hover {
+  color: var(--fg);
+}
+
+/* --- Headings ------------------------------------------------------------- */
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+h1 {
+  margin-bottom: 0.2em;
+  font-size: 3.1em;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+h2 {
+  margin: 1em 0 0.5em;
+  font-size: 1.6em;
+  font-weight: 600;
+  scroll-margin-top: 5rem;
+}
+
+h3 {
+  margin: 1em 0 0.7em;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+h4 {
+  margin: 1em 0 0.5em;
+  font-size: 1.1em;
+  font-weight: 400;
+}
+
+/* Page and post title, with the italic subtitle and date under it. */
+h1.title {
+  margin: 0.6em 0 0.1em;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 1.1em;
+  font-style: italic;
+}
+
+.date {
+  color: var(--muted);
+  font-size: 0.9em;
+  font-variant-numeric: tabular-nums;
+}
+
+p.date {
+  margin: 2em 0 1em;
+}
+
+/* --- Text ----------------------------------------------------------------- */
+
+p {
+  margin: 0 0 1em;
+}
+
+.body {
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.1em;
+  transition: color 0.2s linear;
+}
+
+a:hover {
+  color: var(--muted);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+
+ul,
+ol {
+  margin: 0 0 1em;
+  padding-left: 2em;
+}
+
+li {
+  margin-bottom: 0.3em;
+}
+
+@media (max-width: 47.99rem) {
+  h1 {
+    font-size: 2.4em;
+  }
+}
+
+@media (max-width: 30rem) {
+  .page {
+    padding: 0 16px 4rem;
+  }
+
+  header.site {
+    padding-top: 20px;
+  }
+}
+
+
+/* ==========================================================================
+   Content: quotes, code, tables, images, rules.
+   ========================================================================== */
+
+blockquote {
+  margin: 2em 0;
+  padding: 0.25em 0 0.1em 1.25em;
+  border-left: 1px solid var(--border);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+blockquote p {
+  margin-bottom: 0.5em;
+}
+
+blockquote footer {
+  color: var(--muted);
+  font-size: 0.9em;
+  font-style: normal;
+}
+
+/* --- Code ----------------------------------------------------------------- */
+
+/* Plex Mono looks large next to the serif, so it runs a size down.
+   No ligatures: code reads exactly as typed. */
+code,
+pre {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.84em;
+  line-height: 1.55;
+  font-variant-ligatures: none;
+  font-feature-settings:
+    "liga" 0,
+    "calt" 0;
+  tab-size: 4;
+}
+
+code {
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+  background: var(--tint);
+}
+
+pre {
+  margin: 0 0 1em;
+  padding: 0.9em 1.1em;
+  border-radius: 0.5rem;
+  background: var(--tint);
+  overflow-x: auto;
+}
+
+pre code {
+  padding: 0;
+  background: none;
+  font-size: 1em;
+}
+
+/* --- Tables --------------------------------------------------------------- */
+
+table {
+  width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+  padding: 0.3em 0.6em 0.3em 0;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+th {
+  border-bottom-color: var(--fg);
+  font-weight: 600;
+}
+
+/* --- Images and rules ----------------------------------------------------- */
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.body img {
+  border-radius: 0.5rem;
+}
+
+figure {
+  margin: 2.5em 0;
+}
+
+figcaption {
+  margin-top: 1em;
+  color: var(--muted);
+  font-size: 0.9em;
+}
+
+hr {
+  margin: 2em 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+
+/* ==========================================================================
+   Sidenotes, from {sn|text} and {mn|text} in Markdown (see main.go).
+   Wide screens: in the right margin. Narrow: click the number to open inline.
+   The number is a small pill, like a footnote marker.
+   ========================================================================== */
+
+input.margin-toggle {
+  display: none;
+}
+
+label.margin-toggle {
+  cursor: pointer;
+}
+
+.sidenote,
+.marginnote {
+  display: none;
+  color: var(--muted);
+  font-size: 0.8em;
+  line-height: 1.45;
+}
+
+/* The number in the text. */
+label.sidenote-number::after {
+  counter-increment: sn;
+  content: counter(sn);
+  margin: 0 2px;
+  padding: 3px 4px 1px;
+  border-radius: 4px;
+  background: var(--tint);
+  font-size: 0.75rem;
+  font-weight: 500;
+  vertical-align: 0.15em;
+}
+
+label.sidenote-number:hover::after {
+  background: var(--tint-hover);
+}
+
+/* The number in front of the note. */
+.sidenote::before {
+  content: counter(sn) ". ";
+  font-weight: 500;
+}
+
+/* Narrow: opened inline under the line. */
+input.margin-toggle:checked + .sidenote,
+input.margin-toggle:checked + .marginnote {
+  display: block;
+  margin: 0.5em 0 1em 1em;
+}
+
+/* Wide: always shown, floated into the right margin. Needs room for a
+   14rem note beside the 50rem post column. */
+@media (min-width: 88rem) {
+  .sidenote,
+  .marginnote,
+  input.margin-toggle:checked + .sidenote,
+  input.margin-toggle:checked + .marginnote {
+    display: block;
+    float: right;
+    clear: right;
+    width: 14rem;
+    margin: 0 -16rem 0 0;
+  }
+
+  label.margin-toggle:not(.sidenote-number) {
+    display: none;
+  }
+}
+
+
+/* ==========================================================================
+   Contents (table of contents) for posts with 2+ "##" headings. No JS.
+   Narrow screens: a plain numbered list under the date.
+   Wide screens: fixed on the left. The ×/☰ button is a <label> for a hidden
+   checkbox (.toc-state); checked means closed.
+   ========================================================================== */
+
+.toc-state {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toc {
+  margin: 0 0 2em;
+}
+
+.toc h2 {
+  margin: 0 0 0.5em;
+  font-size: 1.2em;
+}
+
+.toc ol {
+  margin: 0;
+  padding-left: 1.4em;
+}
+
+.toc li {
+  margin-bottom: 0.3em;
+}
+
+.toc-toggle {
+  display: none;
+}
+
+/* The sidebar needs (viewport - 50rem column) / 2 to be wider than itself. */
+@media (min-width: 90rem) {
+  /* --- Sidebar ------------------------------------------------------------ */
+
+  .toc {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 4;
+    width: 22%;
+    max-width: 23rem;
+    margin: 0;
+    padding: 130px 25px 25px;
+    overflow-y: auto;
+    background: var(--bg);
+    /* Fade both ways: allow-discrete keeps it displayed until the fade-out
+       ends; @starting-style below fades it in from 0. */
+    transition:
+      opacity 0.25s ease-out,
+      display 0.25s allow-discrete;
+  }
+
+  @starting-style {
+    .toc {
+      opacity: 0;
+    }
+  }
+
+  .toc-state:checked ~ .page .toc {
+    display: none;
+    opacity: 0;
+  }
+
+  .toc ol {
+    margin-top: 30px;
+    padding: 0;
+    list-style: none;
+    /* Chrome 140+: lets :target-current mark the section in view. */
+    scroll-target-group: auto;
+  }
+
+  .toc li {
+    margin-bottom: 0.6em;
+    line-height: 1.6;
+  }
+
+  .toc a {
+    opacity: 0.5;
+    text-decoration: none;
+    transition:
+      color 0.2s,
+      opacity 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .toc a:hover,
+  .toc a:target-current {
+    opacity: 1;
+    color: var(--fg);
+  }
+
+  /* --- ×/☰ button --------------------------------------------------------- */
+
+  .toc-toggle {
+    position: fixed;
+    top: 22px;
+    left: 12px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .toc-toggle svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+
+  /* Open shows ×, closed shows ☰. */
+  .toc-toggle .menu,
+  .toc-state:checked ~ .page .toc-toggle .close {
+    display: none;
+  }
+
+  .toc-state:checked ~ .page .toc-toggle .menu {
+    display: block;
+  }
+
+  .toc-state:focus-visible ~ .page .toc-toggle {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+  }
+}
+
+
+/* ==========================================================================
+   Page-specific bits: home, archive.
+   ========================================================================== */
+
+/* --- Section headings and link lists (home, archive) ---------------------- */
+
+h2.section {
+  margin: 1.5em 0 0.7em;
+  font-size: 1.2em;
+}
+
+/* "Writing" + RSS button on one line. */
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.5em 0 0.7em;
+}
+
+.section-head h2.section {
+  margin: 0;
+}
+
+ul.links,
+.intro ul {
+  padding-left: 1em;
+}
+
+ul.links li {
+  margin-bottom: 0.8em;
+}
+
+ul.links .date {
+  margin-left: 0.4em;
+}
+
+/* "See archive": no bullet or underline, text in line with the titles. */
+ul.links li.more {
+  list-style: none;
+}
+
+ul.links li.more a {
+  text-decoration: none;
+}
+
+/* --- RSS button ----------------------------------------------------------- */
+
+a.rss {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.2em 0.5em 0.1em;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  font-size: 0.65em;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+a.rss:hover {
+  border-color: var(--fg);
+  color: var(--fg);
+}
+
+a.rss svg {
+  width: 0.9em;
+  height: 0.9em;
+  margin-top: -0.1em;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+
+a.rss path {
+  fill: none;
+}
+
+
+/* ==========================================================================
+   Respect the OS setting for less motion: no fades or transitions.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+    animation: none !important;
+  }
+}

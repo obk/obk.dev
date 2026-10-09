@@ -1,0 +1,330 @@
+// Tiny static site generator: content/ + templates/ + static/ -> public/
+package main
+
+import (
+	"bytes"
+	"encoding/xml"
+	"flag"
+	"fmt"
+	"html/template"
+	"io/fs"
+	"log"
+	"net/http"
+	"os"
+	"os/exec"
+	"path"
+	"path/filepath"
+	"regexp"
+	"sort"
+	"strings"
+	"time"
+
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer/html"
+)
+
+type Post struct {
+	Title, Description, Slug string
+	Time                     time.Time
+	Body                     template.HTML
+	TOC                      []Heading
+}
+
+// Heading is a level-2 heading, listed in a post's table of contents.
+type Heading struct {
+	ID   string
+	Text template.HTML
+}
+
+func (p Post) Year() int        { return p.Time.Year() }
+func (p Post) Date() string     { return p.Time.Format("02-01-2006") }
+func (p Post) LongDate() string { return p.Time.Format("2 January 2006") }
+
+// Year groups the posts published in one year.
+type Year struct {
+	Year  int
+	Posts []Post
+}
+
+type Page struct {
+	Title, Description string
+	Intro              template.HTML
+	Posts              []Post
+	Years              []Year
+	More               bool // home page: more posts than shown, link the archive
+	Post
+}
+
+// Tufte-style notes: {sn|text} is a numbered sidenote, {mn|text} an
+// unnumbered margin note. Both are plain CSS toggles, no JavaScript.
+var note = regexp.MustCompile("(?s)```.*?```|`[^`\n]*`|\\{(sn|mn)\\|([^}]*)\\}")
+
+func notes(src string) string {
+	n := 0
+	return note.ReplaceAllStringFunc(src, func(m string) string {
+		g := note.FindStringSubmatch(m)
+		if g[1] == "" { // inside a code span
+			return m
+		}
+		n++
+		if g[1] == "sn" {
+			return fmt.Sprintf(`<label for="n%d" class="margin-toggle sidenote-number"></label><input type="checkbox" id="n%d" class="margin-toggle"/><span class="sidenote">%s</span>`, n, n, g[2])
+		}
+		return fmt.Sprintf(`<label for="n%d" class="margin-toggle">&#8853;</label><input type="checkbox" id="n%d" class="margin-toggle"/><span class="marginnote">%s</span>`, n, n, g[2])
+	})
+}
+
+var (
+	h2   = regexp.MustCompile(`(?s)<h2 id="([^"]+)">(.*?)</h2>`)
+	tags = regexp.MustCompile(`<[^>]*>`)
+)
+
+// toc lists the level-2 headings of rendered HTML, with their markup stripped.
+func toc(body string) []Heading {
+	var hs []Heading
+	for _, m := range h2.FindAllStringSubmatch(body, -1) {
+		hs = append(hs, Heading{ID: m[1], Text: template.HTML(strings.TrimSpace(tags.ReplaceAllString(m[2], "")))})
+	}
+	return hs
+}
+
+func must(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// assert stops the build when an invariant doesn't hold.
+func assert(ok bool, format string, args ...any) {
+	if !ok {
+		log.Fatalf("assertion failed: "+format, args...)
+	}
+}
+
+// maxPosts bounds every loop over the posts.
+const maxPosts = 10000
+
+// frontMatter splits a Markdown file into its front matter and body.
+func frontMatter(path string) (fm, body string) {
+	raw, err := os.ReadFile(path)
+	must(err)
+	parts := strings.SplitN(strings.ReplaceAll(string(raw), "\r\n", "\n"), "---\n", 3)
+	if len(parts) != 3 || parts[0] != "" {
+		log.Fatalf("%s: missing front matter", path)
+	}
+	return parts[1], parts[2]
+}
+
+func parse(path string) Post {
+	p := Post{Slug: strings.TrimSuffix(filepath.Base(path), ".md")}
+	fm, body := frontMatter(path)
+	for _, line := range strings.Split(fm, "\n") {
+		k, v, ok := strings.Cut(line, ":")
+		if !ok {
+			continue
+		}
+		v = strings.TrimSpace(v)
+		switch strings.TrimSpace(k) {
+		case "title":
+			p.Title = v
+		case "description":
+			p.Description = v
+		case "date":
+			t, err := time.Parse("02-01-2006", v)
+			must(err)
+			p.Time = t
+		}
+	}
+	assert(p.Title != "", "%s: missing title", path)
+	if p.Time.IsZero() && !strings.HasSuffix(path, "about.md") {
+		p.Time = fileDate(path)
+	}
+	var buf bytes.Buffer
+	md := goldmark.New(goldmark.WithExtensions(extension.GFM),
+		goldmark.WithParserOptions(parser.WithAutoHeadingID()),
+		goldmark.WithRendererOptions(html.WithUnsafe()))
+	must(md.Convert([]byte(notes(body)), &buf))
+	p.Body = template.HTML(buf.String())
+	p.TOC = toc(buf.String())
+	return p
+}
+
+// fileDate returns the date the file was first committed to git, falling back
+// to its modification time. Needs full git history (not a shallow clone).
+func fileDate(path string) time.Time {
+	out, err := exec.Command("git", "log", "--diff-filter=A", "--format=%aI", "--", path).Output()
+	if lines := strings.Fields(string(out)); err == nil && len(lines) > 0 {
+		if t, err := time.Parse(time.RFC3339, lines[len(lines)-1]); err == nil {
+			return t
+		}
+	}
+	info, err := os.Stat(path)
+	must(err)
+	return info.ModTime()
+}
+
+// loadPosts parses every Markdown file in dir, newest first.
+func loadPosts(dir string) []Post {
+	files, err := filepath.Glob(filepath.Join(dir, "*.md"))
+	must(err)
+	assert(len(files) <= maxPosts, "%s: %d posts, over the limit of %d", dir, len(files), maxPosts)
+	var posts []Post
+	for _, f := range files {
+		posts = append(posts, parse(f))
+	}
+	sort.SliceStable(posts, func(i, j int) bool { return posts[i].Time.After(posts[j].Time) })
+	return posts
+}
+
+// groupByYear groups date-sorted posts under their year, keeping the order.
+func groupByYear(posts []Post) []Year {
+	var years []Year
+	for _, p := range posts {
+		n := len(years)
+		assert(n == 0 || years[n-1].Year >= p.Year(), "posts not sorted newest first")
+		if n == 0 || years[n-1].Year != p.Year() {
+			years = append(years, Year{Year: p.Year()})
+		}
+		y := &years[len(years)-1]
+		y.Posts = append(y.Posts, p)
+	}
+	return years
+}
+
+func render(tpl, out string, data Page) {
+	t := template.Must(template.ParseFiles("templates/base.html", "templates/"+tpl))
+	must(os.MkdirAll(filepath.Dir(out), 0o755))
+	f, err := os.Create(out)
+	must(err)
+	must(t.ExecuteTemplate(f, "base", data))
+	must(f.Close()) // a failed close can mean a lost write
+}
+
+const siteURL = "https://obk.dev"
+
+// writeFeed writes an RSS 2.0 feed of the posts (newest first) to out.
+func writeFeed(out string, posts []Post) {
+	type item struct {
+		Title       string `xml:"title"`
+		Link        string `xml:"link"`
+		GUID        string `xml:"guid"`
+		PubDate     string `xml:"pubDate"`
+		Description string `xml:"description,omitempty"`
+		Content     string `xml:"content:encoded"`
+	}
+	type channel struct {
+		Title       string `xml:"title"`
+		Link        string `xml:"link"`
+		Description string `xml:"description"`
+		Items       []item `xml:"item"`
+	}
+	var feed struct {
+		XMLName xml.Name `xml:"rss"`
+		Version string   `xml:"version,attr"`
+		Content string   `xml:"xmlns:content,attr"`
+		Channel channel  `xml:"channel"`
+	}
+	feed.Version = "2.0"
+	feed.Content = "http://purl.org/rss/1.0/modules/content/"
+	feed.Channel = channel{Title: "obk", Link: siteURL + "/", Description: "Notes on systems, tooling, building, learning, and navigating in life."}
+	for _, p := range posts {
+		link := siteURL + "/posts/" + p.Slug + "/"
+		feed.Channel.Items = append(feed.Channel.Items, item{
+			Title: p.Title, Link: link, GUID: link, PubDate: p.Time.Format(time.RFC1123Z),
+			Description: p.Description, Content: string(p.Body),
+		})
+	}
+	b, err := xml.MarshalIndent(feed, "", "  ")
+	must(err)
+	must(os.WriteFile(out, append([]byte(xml.Header), b...), 0o644))
+}
+
+func copyDir(src, dst string) {
+	must(filepath.WalkDir(src, func(p string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		rel, err := filepath.Rel(src, p)
+		if err != nil {
+			return err
+		}
+		target := filepath.Join(dst, rel)
+		if d.IsDir() {
+			return os.MkdirAll(target, 0o755)
+		}
+		b, err := os.ReadFile(p)
+		if err != nil {
+			return err
+		}
+		return os.WriteFile(target, b, 0o644)
+	}))
+}
+
+// notFound serves public/404.html for paths missing from public/, as
+// Cloudflare Pages does in production.
+func notFound(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		name := strings.TrimPrefix(path.Clean(r.URL.Path), "/")
+		if name == "" {
+			name = "."
+		}
+		if _, err := fs.Stat(os.DirFS("public"), name); err != nil {
+			b, err := os.ReadFile("public/404.html")
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write(b); err != nil {
+				log.Printf("%s: %v", r.URL.Path, err)
+			}
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
+func main() {
+	serve := flag.String("serve", "", "after building, serve public/ on this address (e.g. :8000)")
+	flag.Parse()
+
+	must(os.RemoveAll("public"))
+	copyDir("static", "public")
+
+	// The home page is the blog: content/posts/*.md, newest first.
+	posts := loadPosts("content/posts")
+	for _, p := range posts {
+		render("post.html", "public/posts/"+p.Slug+"/index.html",
+			Page{Title: p.Title, Description: p.Description, Post: p})
+	}
+	// Home opens with the about text, then the latest posts; the archive lists
+	// all of them by year.
+	about := parse("content/about.md")
+	// Up to five posts fit; past that, show four and make the fifth row a link
+	// to the archive.
+	recent, more := posts, len(posts) > 5
+	if more {
+		recent = posts[:4]
+	}
+	render("index.html", "public/index.html",
+		Page{Title: "obk", Description: "Notes on systems, tooling, building, learning, and navigating in life.", Intro: about.Body, Posts: recent, More: more})
+	render("archive.html", "public/archive/index.html",
+		Page{Title: "Archive", Years: groupByYear(posts)})
+
+	writeFeed("public/feed.xml", posts)
+
+	render("page.html", "public/about/index.html",
+		Page{Title: about.Title, Description: about.Description, Post: about})
+
+	// Cloudflare Pages serves public/404.html for any path that doesn't exist.
+	render("404.html", "public/404.html", Page{Title: "Page not found"})
+	log.Printf("built %d posts, about, 404 -> public/", len(posts))
+
+	if *serve != "" {
+		log.Printf("serving public/ on http://localhost%s", *serve)
+		log.Fatal(http.ListenAndServe(*serve, notFound(http.FileServer(http.Dir("public")))))
+	}
+}

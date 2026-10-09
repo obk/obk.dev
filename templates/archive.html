@@ -1,0 +1,6 @@
+{{define "main"}}<h1 class="title">{{.Title}}</h1>
+{{range .Years}}<h2 class="section">{{.Year}}</h2>
+<ul class="links">
+{{range .Posts}}<li><a href="/posts/{{.Slug}}/">{{.Title}}</a> <span class="date">{{.Date}}</span></li>
+{{end}}</ul>
+{{end}}{{end}}
