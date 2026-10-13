@@ -3,6 +3,8 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/xml"
 	"flag"
 	"fmt"
@@ -253,11 +255,29 @@ var (
 	fontPreload string
 )
 
+// asset returns the URL of a file in public/ with a hash of its contents
+// appended, so browsers fetch it again whenever it changes, however long
+// they were told to cache it.
+var assetURLs = map[string]string{}
+
+func asset(url string) string {
+	if v, ok := assetURLs[url]; ok {
+		return v
+	}
+	b, err := os.ReadFile(filepath.Join("public", filepath.FromSlash(url)))
+	must(err)
+	sum := sha256.Sum256(b)
+	v := url + "?v=" + hex.EncodeToString(sum[:4])
+	assetURLs[url] = v
+	return v
+}
+
 func render(tpl, out string, data Page) {
 	data.Site = site
 	data.FontPreload = fontPreload
 	data.Animations = animations
-	t := template.Must(template.ParseFiles("templates/base.html", "templates/"+tpl))
+	t := template.Must(template.New("base.html").Funcs(template.FuncMap{"asset": asset}).
+		ParseFiles("templates/base.html", "templates/"+tpl))
 	must(os.MkdirAll(filepath.Dir(out), 0o755))
 	f, err := os.Create(out)
 	must(err)

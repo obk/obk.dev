@@ -15,7 +15,7 @@
 {{range .TOC}}<li><a href="#{{.ID}}">{{.Text}}</a></li>
 {{end}}</ol>
 </nav>
-<script src="/js/toc.js" defer></script>
+<script src="{{asset "/js/toc.js"}}" defer></script>
 {{end}}<div class="body">
 {{.Body}}
 </div>

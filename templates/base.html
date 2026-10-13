@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.Title}}</title>
 <link rel="preload" href="{{.FontPreload}}" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/css/fonts.css">
-<link rel="stylesheet" href="/css/site.css">
+<link rel="stylesheet" href="{{asset "/css/fonts.css"}}">
+<link rel="stylesheet" href="{{asset "/css/site.css"}}">
 <link rel="icon" href="/images/favicon.ico">
 <link rel="alternate" type="application/rss+xml" title="{{.Site.Title}}" href="/feed.xml">
 <meta property="og:title" content="{{.Title}}">
@@ -29,48 +29,48 @@
 {{/* The animation on top of home and contact, picked by animation in config.toml.
    Each is hidden until its script runs; static/js/loop.js runs them all.
    "random" puts them all on the page and pickArt shows one. */}}
-{{define "animation"}}{{with .Animation}}<script src="/js/loop.js"></script>
+{{define "animation"}}{{with .Animation}}<script src="{{asset "/js/loop.js"}}"></script>
 {{if eq . "random"}}<script>pickArt({{$.Animations}})</script>
 {{template "shapes"}}{{template "curve"}}{{template "cycloid"}}{{template "mandelbrot"}}{{template "cycloid-horizontal"}}{{template "medley"}}{{else if eq . "shapes"}}{{template "shapes"}}{{else if eq . "curve"}}{{template "curve"}}{{else if eq . "cycloid"}}{{template "cycloid"}}{{else if eq . "mandelbrot"}}{{template "mandelbrot"}}{{else if eq . "cycloid-horizontal"}}{{template "cycloid-horizontal"}}{{else if eq . "medley"}}{{template "medley"}}{{end}}{{end}}{{end}}
 
 {{/* Spinning ASCII shapes (static/js/shapes.js). */}}
 {{define "shapes"}}<pre class="shapes" id="shapes" aria-hidden="true" hidden></pre>
-<script src="/js/shapes.js"></script>
+<script src="{{asset "/js/shapes.js"}}"></script>
 {{end}}
 
 {{/* One line looping through Lissajous figures and rose curves
    (static/js/curve.js). */}}
-{{define "curve"}}<svg class="curve" id="curve" viewBox="-1.08 -1.08 2.16 2.16" aria-hidden="true" hidden><path/></svg>
-<script src="/js/curve.js"></script>
+{{define "curve"}}<svg class="curve" id="curve" fill="none" viewBox="-1.08 -1.08 2.16 2.16" aria-hidden="true" hidden><path/></svg>
+<script src="{{asset "/js/curve.js"}}"></script>
 {{end}}
 
 {{/* A circle rolling round another, its pen drawing epicycloids and
    hypocycloids (static/js/cycloid.js). */}}
-{{define "cycloid"}}<svg class="curve" id="cycloid" viewBox="-1.08 -1.08 2.16 2.16" aria-hidden="true" hidden><circle class="fixed faint" cx="0" cy="0" r="0"/><circle class="rolling faint" r="0"/><path class="spoke faint"/><path class="line"/><circle class="pen" r="0.022"/></svg>
-<script src="/js/cycloid.js"></script>
+{{define "cycloid"}}<svg class="curve" id="cycloid" fill="none" viewBox="-1.08 -1.08 2.16 2.16" aria-hidden="true" hidden><circle class="fixed faint" cx="0" cy="0" r="0"/><circle class="rolling faint" r="0"/><path class="spoke faint"/><path class="line"/><circle class="pen" r="0.022"/></svg>
+<script src="{{asset "/js/cycloid.js"}}"></script>
 {{end}}
 
 {{/* One line closing in on the Mandelbrot set's boundary
    (static/js/mandelbrot.js). */}}
-{{define "mandelbrot"}}<svg class="curve" id="mandelbrot" viewBox="-2.1 -1.6 3.2 3.2" aria-hidden="true" hidden><path/></svg>
-<script src="/js/mandelbrot.js"></script>
+{{define "mandelbrot"}}<svg class="curve" id="mandelbrot" fill="none" viewBox="-2.1 -1.6 3.2 3.2" aria-hidden="true" hidden><path/></svg>
+<script src="{{asset "/js/mandelbrot.js"}}"></script>
 {{end}}
 
 {{/* A circle rolling back and forth along a line, its pen drawing normal,
    curtate and prolate cycloids (static/js/cycloid-horizontal.js). The line
    fades out at both ends. */}}
-{{define "cycloid-horizontal"}}<svg class="curve" id="cycloid-horizontal" viewBox="-2.2 -1.4 4.4 1.8" aria-hidden="true" hidden>
+{{define "cycloid-horizontal"}}<svg class="curve" id="cycloid-horizontal" fill="none" viewBox="-2.2 -1.4 4.4 1.8" aria-hidden="true" hidden>
 <defs><linearGradient id="ch-fade" x1="-2.2" x2="2.2" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.1" stop-color="#fff"/><stop offset="0.9" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
 <mask id="ch-mask"><rect x="-2.2" y="-1.4" width="4.4" height="1.8" fill="url(#ch-fade)"/></mask></defs>
 <g mask="url(#ch-mask)"><path class="ground faint"/><path class="old"/><path class="line"/></g><circle class="rolling faint" cx="0" r="0"/><path class="spoke faint"/><circle class="pen" r="0.03"/></svg>
-<script src="/js/cycloid-horizontal.js"></script>
+<script src="{{asset "/js/cycloid-horizontal.js"}}"></script>
 {{end}}
 
 {{/* curve, cycloid and cycloid-horizontal as one, one line throughout
    (static/js/medley.js). The base is the fixed circle, then the ground. */}}
-{{define "medley"}}<svg class="curve" id="medley" viewBox="-1.6 -1.08 3.2 2.16" aria-hidden="true" hidden>
+{{define "medley"}}<svg class="curve" id="medley" fill="none" viewBox="-1.6 -1.08 3.2 2.16" aria-hidden="true" hidden>
 <defs><linearGradient id="md-fade" x1="-1.6" x2="1.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.1" stop-color="#fff"/><stop offset="0.9" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
 <mask id="md-mask"><rect x="-1.6" y="-1.08" width="3.2" height="2.16" fill="url(#md-fade)"/></mask></defs>
 <g mask="url(#md-mask)"><path class="base faint"/><path class="old"/><path class="line"/></g><circle class="rolling faint" r="0"/><path class="spoke faint"/><circle class="pen" r="0.022"/></svg>
-<script src="/js/medley.js"></script>
+<script src="{{asset "/js/medley.js"}}"></script>
 {{end}}
