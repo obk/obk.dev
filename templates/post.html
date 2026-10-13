@@ -1,4 +1,4 @@
-{{define "page-class"}} wide{{end}}
+{{define "page-class"}} wide cased{{end}}
 {{define "toc-state"}}{{if gt (len .TOC) 1}}<input type="checkbox" id="toc-closed" class="toc-state" aria-label="hide contents">
 {{end}}{{end}}
 {{define "toc-toggle"}}{{if gt (len .TOC) 1}}<label for="toc-closed" class="toc-toggle" title="contents">

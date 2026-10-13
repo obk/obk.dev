@@ -84,6 +84,16 @@ body {
   max-width: 50rem;
 }
 
+/* Lowercase everywhere but writings and the essays themselves (.cased),
+   whatever case the text is typed in. Code keeps its case. */
+.page:not(.cased) {
+  text-transform: lowercase;
+}
+
+.page:not(.cased) :is(code, pre) {
+  text-transform: none;
+}
+
 /* --- Headings ------------------------------------------------------------- */
 
 h1,
