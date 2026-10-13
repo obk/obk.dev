@@ -118,6 +118,11 @@ the site works without it.
   of a circle rolling along it (a cycloid is an epicycloid round an
   infinitely large circle); then the trail closes back into the first
   Lissajous figure. Every change blends the same points, so nothing cuts.
+- `ford`: Ford circles. Over every fraction p/q between 0 and 1, in lowest
+  terms, a circle of radius 1/(2q²) resting on a line; no two overlap, and
+  neighbours in a Farey sequence touch. The two big ones over 0 and 1 rise
+  first, then each denominator up to 20, smaller and quicker; they hold,
+  then sink back, smallest first.
 - `random`: one of these, picked once per visit and kept from page to page;
   a return visit gets a different one.
 

@@ -573,7 +573,8 @@ svg#cycloid-horizontal {
   width: min(100%, 34rem);
 }
 
-svg#medley {
+svg#medley,
+svg#ford {
   width: min(100%, 30rem);
 }
 
@@ -628,6 +629,10 @@ ul.links .date {
 
 .page.centered:has(#medley:not([hidden])) {
   --art: calc(min(100vw - 32px, 30rem) * 2.16 / 3.2);
+}
+
+.page.centered:has(#ford:not([hidden])) {
+  --art: calc(min(100vw - 32px, 30rem) * 1.08 / 2.08);
 }
 
 @media (max-width: 30rem) {

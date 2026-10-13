@@ -31,7 +31,7 @@
    "random" puts them all on the page and pickArt shows one. */}}
 {{define "animation"}}{{with .Animation}}<script src="{{asset "/js/loop.js"}}"></script>
 {{if eq . "random"}}<script>pickArt({{$.Animations}})</script>
-{{template "shapes"}}{{template "curve"}}{{template "cycloid"}}{{template "mandelbrot"}}{{template "cycloid-horizontal"}}{{template "medley"}}{{else if eq . "shapes"}}{{template "shapes"}}{{else if eq . "curve"}}{{template "curve"}}{{else if eq . "cycloid"}}{{template "cycloid"}}{{else if eq . "mandelbrot"}}{{template "mandelbrot"}}{{else if eq . "cycloid-horizontal"}}{{template "cycloid-horizontal"}}{{else if eq . "medley"}}{{template "medley"}}{{end}}{{end}}{{end}}
+{{template "shapes"}}{{template "curve"}}{{template "cycloid"}}{{template "mandelbrot"}}{{template "cycloid-horizontal"}}{{template "medley"}}{{template "ford"}}{{else if eq . "shapes"}}{{template "shapes"}}{{else if eq . "curve"}}{{template "curve"}}{{else if eq . "cycloid"}}{{template "cycloid"}}{{else if eq . "mandelbrot"}}{{template "mandelbrot"}}{{else if eq . "cycloid-horizontal"}}{{template "cycloid-horizontal"}}{{else if eq . "medley"}}{{template "medley"}}{{else if eq . "ford"}}{{template "ford"}}{{end}}{{end}}{{end}}
 
 {{/* Spinning ASCII shapes (static/js/shapes.js). */}}
 {{define "shapes"}}<pre class="shapes" id="shapes" aria-hidden="true" hidden></pre>
@@ -73,4 +73,10 @@
 <mask id="md-mask"><rect x="-1.6" y="-1.08" width="3.2" height="2.16" fill="url(#md-fade)"/></mask></defs>
 <g mask="url(#md-mask)"><path class="base faint"/><path class="old"/><path class="line"/></g><circle class="rolling faint" r="0"/><path class="spoke faint"/><circle class="pen" r="0.022"/></svg>
 <script src="{{asset "/js/medley.js"}}"></script>
+{{end}}
+
+{{/* Ford circles rising from a line over the fractions in [0, 1], the big
+   two over 0 and 1 first, then smaller and smaller (static/js/ford.js). */}}
+{{define "ford"}}<svg class="curve" id="ford" fill="none" viewBox="-0.54 -1.04 2.08 1.08" aria-hidden="true" hidden><path class="ground faint" d="M-0.54 0H1.54"/><g class="circles"></g></svg>
+<script src="{{asset "/js/ford.js"}}"></script>
 {{end}}

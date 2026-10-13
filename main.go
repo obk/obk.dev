@@ -70,7 +70,7 @@ type Config struct {
 }
 
 // The animations config.toml can name, besides "random" and "".
-var animations = []string{"shapes", "curve", "cycloid", "mandelbrot", "cycloid-horizontal", "medley"}
+var animations = []string{"shapes", "curve", "cycloid", "mandelbrot", "cycloid-horizontal", "medley", "ford"}
 
 // loadConfig reads and checks config.toml.
 func loadConfig(path string) *Config {

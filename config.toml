@@ -19,6 +19,8 @@ description = "notes on systems, tooling, building, learning, and navigating in 
 #                         curtate and prolate cycloids
 #   "medley"              curve, cycloid and cycloid-horizontal as one,
 #                         one line morphing through all three
+#   "ford"                Ford circles: two big ones over 0 and 1, then
+#                         smaller and smaller over every fraction between
 #   "random"              one of these, picked once per visit
 #   ""                    nothing; home and contact aren't centered then
 animation = "curve"
