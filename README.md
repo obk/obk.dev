@@ -123,6 +123,15 @@ the site works without it.
   neighbours in a Farey sequence touch. The two big ones over 0 and 1 rise
   first, then each denominator up to 20, smaller and quicker; they hold,
   then sink back, smallest first.
+- `golden`: a dot stretches into a line, which curls up into the golden
+  spiral (a logarithmic spiral widening by φ every quarter turn), holds,
+  then uncurls back to the dot. The line bends but never stretches: each
+  stage is the same line partly rolled up.
+- `nautilus`: a nautilus shell in section. The line curls as in `golden`,
+  but into a spiral widening 3 times a turn, close to a real nautilus;
+  then the mouth closes it and the septa, the curved walls between its
+  chambers, grow in from the innermost out, leaving the last third of a
+  turn open as the body chamber.
 - `random`: one of these, picked once per visit and kept from page to page;
   a return visit gets a different one.
 - `custom`: like `random`, but only from the ones listed in `custom`, e.g.

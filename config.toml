@@ -21,19 +21,23 @@ description = "notes on systems, tooling, building, learning, and navigating in 
 #                         one line morphing through all three
 #   "ford"                Ford circles: two big ones over 0 and 1, then
 #                         smaller and smaller over every fraction between
+#   "golden"              a dot, then a line that curls into the golden
+#                         spiral and back
+#   "nautilus"            a nautilus in section: a line curls into its
+#                         spiral, then the walls between its chambers grow
 #   "random"              one of these, picked once per visit
 #   "custom"              one of those listed in custom below, picked once
 #                         per visit
 #   ""                    nothing; home and contact's text sits a third of
 #                         the way down
-animation = "shapes"
+animation = "nautilus"
 
 # The animations "custom" picks from, e.g. ["curve", "cycloid", "ford"].
 # Ignored unless animation is "custom".
 custom = []
 
 # Page views by goatcounter.com: your site's count URL, or "" for none.
-goatcounter = "https://obk.goatcounter.com/count"
+goatcounter = ""
 
 # The license for your writing and pictures, shown under each post and in
 # the feed. Leave name "" to show none. (The code is GPL v3; see LICENSE.)

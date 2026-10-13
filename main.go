@@ -71,7 +71,7 @@ type Config struct {
 }
 
 // The animations config.toml can name, besides "random", "custom" and "".
-var animations = []string{"shapes", "curve", "cycloid", "mandelbrot", "cycloid-horizontal", "medley", "ford"}
+var animations = []string{"shapes", "curve", "cycloid", "mandelbrot", "cycloid-horizontal", "medley", "ford", "golden", "nautilus"}
 
 // artPool lists the animations a page with this animation setting carries:
 // none, one, or with "random" and "custom" several to pick from.

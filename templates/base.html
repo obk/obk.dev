@@ -35,7 +35,7 @@
 {{end}}{{range .}}{{template "art" .}}{{end}}{{end}}{{end}}
 
 {{/* One animation, by name. */}}
-{{define "art"}}{{if eq . "shapes"}}{{template "shapes"}}{{else if eq . "curve"}}{{template "curve"}}{{else if eq . "cycloid"}}{{template "cycloid"}}{{else if eq . "mandelbrot"}}{{template "mandelbrot"}}{{else if eq . "cycloid-horizontal"}}{{template "cycloid-horizontal"}}{{else if eq . "medley"}}{{template "medley"}}{{else if eq . "ford"}}{{template "ford"}}{{end}}{{end}}
+{{define "art"}}{{if eq . "shapes"}}{{template "shapes"}}{{else if eq . "curve"}}{{template "curve"}}{{else if eq . "cycloid"}}{{template "cycloid"}}{{else if eq . "mandelbrot"}}{{template "mandelbrot"}}{{else if eq . "cycloid-horizontal"}}{{template "cycloid-horizontal"}}{{else if eq . "medley"}}{{template "medley"}}{{else if eq . "ford"}}{{template "ford"}}{{else if eq . "golden"}}{{template "golden"}}{{else if eq . "nautilus"}}{{template "nautilus"}}{{end}}{{end}}
 
 {{/* Spinning ASCII shapes (static/js/shapes.js). */}}
 {{define "shapes"}}<pre class="shapes" id="shapes" aria-hidden="true" hidden></pre>
@@ -83,4 +83,16 @@
    two over 0 and 1 first, then smaller and smaller (static/js/ford.js). */}}
 {{define "ford"}}<svg class="curve" id="ford" fill="none" viewBox="-0.54 -1.04 2.08 1.08" aria-hidden="true" hidden><path class="ground faint" d="M-0.54 0H1.54"/><g class="circles"></g></svg>
 <script src="{{asset "/js/ford.js"}}"></script>
+{{end}}
+
+{{/* A dot that stretches into a line, which curls up into the golden
+   spiral and back (static/js/golden.js). */}}
+{{define "golden"}}<svg class="curve" id="golden" fill="none" viewBox="-1.08 -0.7 2.16 1.4" aria-hidden="true" hidden><path/></svg>
+<script src="{{asset "/js/golden.js"}}"></script>
+{{end}}
+
+{{/* A nautilus shell in section: a line that curls into its spiral, then
+   the walls between its chambers grow in (static/js/nautilus.js). */}}
+{{define "nautilus"}}<svg class="curve" id="nautilus" fill="none" viewBox="-1.08 -0.82 2.16 1.64" aria-hidden="true" hidden><path class="wall"/><path class="septa"/></svg>
+<script src="{{asset "/js/nautilus.js"}}"></script>
 {{end}}
