@@ -74,6 +74,8 @@ Add `content/posts/<slug>.md`; the file name becomes the URL.
     content/     about.md, contact.md, posts/*.md
     templates/   base.html wraps every page; one template per page type
     static/      copied as-is: css/site.css, js/, images/, public.asc
+    tools/gifs/  records the animations as GIFs for this README (own module)
+    docs/        those GIFs; not part of the site
 
 | url               | source                                | template        |
 |-------------------|---------------------------------------|-----------------|
@@ -90,6 +92,28 @@ to contact and writings; every other page ends with a link one level up
 (a post to writings; writings, about and contact to home).
 
 ### Animations
+
+<table>
+<tr>
+<td align="center"><img src="docs/animations/shapes.gif" width="250" alt="shapes"><br><code>shapes</code></td>
+<td align="center"><img src="docs/animations/curve.gif" width="250" alt="curve"><br><code>curve</code></td>
+<td align="center"><img src="docs/animations/cycloid.gif" width="250" alt="cycloid"><br><code>cycloid</code></td>
+</tr>
+<tr>
+<td align="center"><img src="docs/animations/mandelbrot.gif" width="250" alt="mandelbrot"><br><code>mandelbrot</code></td>
+<td align="center"><img src="docs/animations/cycloid-horizontal.gif" width="250" alt="cycloid-horizontal"><br><code>cycloid-horizontal</code></td>
+<td align="center"><img src="docs/animations/medley.gif" width="250" alt="medley"><br><code>medley</code></td>
+</tr>
+<tr>
+<td align="center"><img src="docs/animations/ford.gif" width="250" alt="ford"><br><code>ford</code></td>
+<td align="center"><img src="docs/animations/golden.gif" width="250" alt="golden"><br><code>golden</code></td>
+<td align="center"><img src="docs/animations/nautilus.gif" width="250" alt="nautilus"><br><code>nautilus</code></td>
+</tr>
+</table>
+
+The GIFs are recorded from the real scripts by `tools/gifs`; after
+changing an animation, run `go -C tools/gifs run .` (or name the ones to
+redo: `go -C tools/gifs run . golden`).
 
 Set `animation` in `config.toml`. Each is one script in `static/js/`, all
 run by `loop.js`, which pauses them off screen, shows a still frame to
