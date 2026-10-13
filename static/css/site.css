@@ -610,6 +610,31 @@ input.margin-toggle:checked + .marginnote {
    Page-specific bits: home, archive.
    ========================================================================== */
 
+/* --- Spinning shapes on the home page (static/js/shapes.js) --------------- */
+
+/* ASCII art, wider than the text column and centered on the page. The script
+   fills in as many characters as fit the box. Hidden without JavaScript. */
+pre.shapes {
+  width: min(calc(100vw - 32px), 60rem);
+  height: min(60vh, 34rem);
+  margin: 0 0 1.5rem 50%;
+  padding: 0;
+  translate: -50%;
+  overflow: hidden;
+  background: none;
+  border-radius: 0;
+  font-size: 0.75rem;
+  line-height: 1;
+  user-select: none;
+}
+
+@media (max-width: 30rem) {
+  pre.shapes {
+    height: min(48vh, 22rem);
+    font-size: 0.5625rem;
+  }
+}
+
 /* --- Section headings and link lists (home, archive) ---------------------- */
 
 h2.section {

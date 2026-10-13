@@ -1,7 +1,7 @@
 # obk.dev
 
-Personal site. Static, no JavaScript. One Go program turns Markdown into
-HTML: `content/` + `templates/` + `static/` -> `public/`.
+Personal site. Static; the only JavaScript is the home page animation. One
+Go program turns Markdown into HTML: `content/` + `templates/` + `static/` -> `public/`.
 
     go run .                  # build into public/
     go run . -serve :8000     # build, then serve on http://localhost:8000
@@ -16,7 +16,7 @@ Deploys on push: `.build.yml` (builds.sr.ht) runs `go run .` and uploads
     main.go      the generator: Markdown, sidenotes, contents, feed, 404
     content/     about.md, posts/*.md
     templates/   base.html wraps every page; one template per page type
-    static/      copied as-is: css/site.css, fonts/, images/, public.asc (pgp key)
+    static/      copied as-is: css/site.css, js/shapes.js, fonts/, images/, public.asc (pgp key)
 
 | url                          | source                                | template       |
 |------------------------------|---------------------------------------|----------------|
@@ -27,7 +27,8 @@ Deploys on push: `.build.yml` (builds.sr.ht) runs `go run .` and uploads
 | `/about/`                    | `about.md`                            | `page.html`    |
 | `/404.html`                  | (none)                                | `404.html`     |
 
-No nav: the header is just the site name. Home is the about text, then the
+No nav: the header is just the site name. Home opens with spinning ASCII
+shapes (`static/js/shapes.js`), then the about text, then the
 latest posts under "Writing" with an RSS button: up to 5 posts, or 4 plus a
 "See archive" link once there are more.
 
@@ -64,6 +65,10 @@ darioamodei.com.
   latin and latin-ext subsets.
 - Dark mode follows the OS, no toggle. Body weight drops to 370 and `<img>`
   SVGs are inverted.
+- Home animation: donut, cube, octahedron, Menger sponge, dodecahedron,
+  gyroid, Hopf link. Each character raymarches a signed distance field; a
+  morph blends two fields, so shapes melt into each other. Pauses off screen,
+  static under reduced motion, hidden without JavaScript.
 - Code: 0.84em, no ligatures, tab = 4, no syntax highlighting.
 - The contents ×/☰ button is a checkbox + label. Current-section highlight
   uses `:target-current` (Chrome 140+ only).
