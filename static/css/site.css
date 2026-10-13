@@ -619,6 +619,12 @@ ul.links .date {
   text-align: center;
 }
 
+/* No animation (animation = "" in config.toml): the text starts a third of
+   the way down instead, still at the same height on both pages. */
+.page.centered:not(:has(svg.curve, pre.shapes)) {
+  padding-top: max(2rem, 33svh);
+}
+
 .page.centered:has(pre.shapes:not([hidden])) {
   --art: min(60vh, 34rem);
 }

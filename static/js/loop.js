@@ -68,8 +68,8 @@ function animate(el, key, draw, { start = 0, still = start } = {}) {
   return () => draw(t);
 }
 
-// With animation = "random" (config.toml), the page holds every animation and
-// pickArt chooses one, before any of them runs: once per visit, so home and
+// With animation = "random" or "custom" (config.toml), the page holds several
+// animations and pickArt chooses one, before any of them runs: once per visit, so home and
 // contact show the same one, and where it can, not the one from last visit.
 // The choice goes on <html data-art>.
 function pickArt(names) {

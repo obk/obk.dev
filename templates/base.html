@@ -15,7 +15,7 @@
 {{end}}<meta property="og:site_name" content="{{.Site.Title}}">
 </head>
 <body>
-{{block "toc-state" .}}{{end}}<div class="page{{block "page-class" .}}{{end}}{{if .Animation}} centered{{end}}">
+{{block "toc-state" .}}{{end}}<div class="page{{block "page-class" .}}{{end}}{{if .Centered}} centered{{end}}">
 {{block "toc-toggle" .}}{{end}}<main>
 {{template "main" .}}
 {{with .Up}}<p class="back"><a href="{{.URL}}">&larr; back to {{.Name}}</a></p>
@@ -28,10 +28,14 @@
 
 {{/* The animation on top of home and contact, picked by animation in config.toml.
    Each is hidden until its script runs; static/js/loop.js runs them all.
-   "random" puts them all on the page and pickArt shows one. */}}
-{{define "animation"}}{{with .Animation}}<script src="{{asset "/js/loop.js"}}"></script>
-{{if eq . "random"}}<script>pickArt({{$.Animations}})</script>
-{{template "shapes"}}{{template "curve"}}{{template "cycloid"}}{{template "mandelbrot"}}{{template "cycloid-horizontal"}}{{template "medley"}}{{template "ford"}}{{else if eq . "shapes"}}{{template "shapes"}}{{else if eq . "curve"}}{{template "curve"}}{{else if eq . "cycloid"}}{{template "cycloid"}}{{else if eq . "mandelbrot"}}{{template "mandelbrot"}}{{else if eq . "cycloid-horizontal"}}{{template "cycloid-horizontal"}}{{else if eq . "medley"}}{{template "medley"}}{{else if eq . "ford"}}{{template "ford"}}{{end}}{{end}}{{end}}
+   .Animations lists the ones on the page: with "random" or "custom" there
+   can be several, and pickArt shows one. */}}
+{{define "animation"}}{{with .Animations}}<script src="{{asset "/js/loop.js"}}"></script>
+{{if gt (len .) 1}}<script>pickArt({{.}})</script>
+{{end}}{{range .}}{{template "art" .}}{{end}}{{end}}{{end}}
+
+{{/* One animation, by name. */}}
+{{define "art"}}{{if eq . "shapes"}}{{template "shapes"}}{{else if eq . "curve"}}{{template "curve"}}{{else if eq . "cycloid"}}{{template "cycloid"}}{{else if eq . "mandelbrot"}}{{template "mandelbrot"}}{{else if eq . "cycloid-horizontal"}}{{template "cycloid-horizontal"}}{{else if eq . "medley"}}{{template "medley"}}{{else if eq . "ford"}}{{template "ford"}}{{end}}{{end}}
 
 {{/* Spinning ASCII shapes (static/js/shapes.js). */}}
 {{define "shapes"}}<pre class="shapes" id="shapes" aria-hidden="true" hidden></pre>

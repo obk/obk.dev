@@ -125,6 +125,8 @@ the site works without it.
   then sink back, smallest first.
 - `random`: one of these, picked once per visit and kept from page to page;
   a return visit gets a different one.
+- `custom`: like `random`, but only from the ones listed in `custom`, e.g.
+  `custom = ["curve", "cycloid", "ford"]`.
 
 ### Style
 

@@ -57,8 +57,9 @@ type Config struct {
 	Title       string `toml:"title"`
 	URL         string `toml:"url"`
 	Description string `toml:"description"`
-	Animation   string `toml:"animation"`
-	GoatCounter string `toml:"goatcounter"`
+	Animation   string   `toml:"animation"`
+	Custom      []string `toml:"custom"`
+	GoatCounter string   `toml:"goatcounter"`
 	Fonts       struct {
 		Text string `toml:"text"`
 		Mono string `toml:"mono"`
@@ -69,8 +70,22 @@ type Config struct {
 	} `toml:"license"`
 }
 
-// The animations config.toml can name, besides "random" and "".
+// The animations config.toml can name, besides "random", "custom" and "".
 var animations = []string{"shapes", "curve", "cycloid", "mandelbrot", "cycloid-horizontal", "medley", "ford"}
+
+// artPool lists the animations a page with this animation setting carries:
+// none, one, or with "random" and "custom" several to pick from.
+func artPool(animation string) []string {
+	switch animation {
+	case "":
+		return nil
+	case "random":
+		return animations
+	case "custom":
+		return site.Custom
+	}
+	return []string{animation}
+}
 
 // loadConfig reads and checks config.toml.
 func loadConfig(path string) *Config {
@@ -84,8 +99,15 @@ func loadConfig(path string) *Config {
 	}
 	c.URL = strings.TrimSuffix(c.URL, "/")
 	assert(c.Title != "" && c.URL != "", "%s: title and url are required", path)
-	assert(c.Animation == "" || c.Animation == "random" || slices.Contains(animations, c.Animation),
-		"%s: animation is %q, want \"random\", \"\" or one of %q", path, c.Animation, animations)
+	assert(c.Animation == "" || c.Animation == "random" || c.Animation == "custom" || slices.Contains(animations, c.Animation),
+		"%s: animation is %q, want \"random\", \"custom\", \"\" or one of %q", path, c.Animation, animations)
+	if c.Animation == "custom" {
+		assert(len(c.Custom) > 0, "%s: animation is \"custom\" but custom lists none", path)
+	}
+	for i, a := range c.Custom {
+		assert(slices.Contains(animations, a), "%s: custom has %q, want one of %q", path, a, animations)
+		assert(!slices.Contains(c.Custom[:i], a), "%s: custom has %q twice", path, a)
+	}
 	assert(c.Fonts.Text != "" && c.Fonts.Mono != "", "%s: [fonts] text and mono are required", path)
 	return &c
 }
@@ -104,10 +126,11 @@ type Page struct {
 	Intro              template.HTML
 	Years              []Year
 	Animation          string   // on top of home and contact (config.toml); "" for none
+	Centered           bool     // home and contact: text centered, the same height on both
 	Up                 *Link    // the "← back to" link at the bottom; nil for none
 	Site               *Config  // set by render: config.toml
 	FontPreload        string   // set by render: the font file every page needs first
-	Animations         []string // set by render: the animations "random" picks from
+	Animations         []string // set by render: the animations on the page, from Animation
 	Post
 }
 
@@ -275,7 +298,7 @@ func asset(url string) string {
 func render(tpl, out string, data Page) {
 	data.Site = site
 	data.FontPreload = fontPreload
-	data.Animations = animations
+	data.Animations = artPool(data.Animation)
 	t := template.Must(template.New("base.html").Funcs(template.FuncMap{"asset": asset}).
 		ParseFiles("templates/base.html", "templates/"+tpl))
 	must(os.MkdirAll(filepath.Dir(out), 0o755))
@@ -391,7 +414,7 @@ func main() {
 	// writings; writings lists all posts by year.
 	about := parse("content/about.md")
 	render("index.html", "public/index.html",
-		Page{Title: site.Title, Description: site.Description, Intro: about.Body, Animation: site.Animation})
+		Page{Title: site.Title, Description: site.Description, Intro: about.Body, Animation: site.Animation, Centered: true})
 	render("writings.html", "public/writings/index.html",
 		Page{Title: "writings", Years: groupByYear(posts), Up: upHome})
 
@@ -401,7 +424,7 @@ func main() {
 		Page{Title: about.Title, Description: about.Description, Post: about, Up: upHome})
 	contact := parse("content/contact.md")
 	render("page.html", "public/contact/index.html",
-		Page{Title: contact.Title, Description: contact.Description, Post: contact, Animation: site.Animation, Up: upHome})
+		Page{Title: contact.Title, Description: contact.Description, Post: contact, Animation: site.Animation, Centered: true, Up: upHome})
 
 	// Cloudflare Pages serves public/404.html for any path that doesn't exist.
 	render("404.html", "public/404.html", Page{Title: "page not found"})
