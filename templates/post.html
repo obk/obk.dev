@@ -1,7 +1,7 @@
 {{define "page-class"}} wide{{end}}
-{{define "toc-state"}}{{if gt (len .TOC) 1}}<input type="checkbox" id="toc-closed" class="toc-state" aria-label="Hide contents">
+{{define "toc-state"}}{{if gt (len .TOC) 1}}<input type="checkbox" id="toc-closed" class="toc-state" aria-label="hide contents">
 {{end}}{{end}}
-{{define "toc-toggle"}}{{if gt (len .TOC) 1}}<label for="toc-closed" class="toc-toggle" title="Contents">
+{{define "toc-toggle"}}{{if gt (len .TOC) 1}}<label for="toc-closed" class="toc-toggle" title="contents">
 <svg class="close" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
 <svg class="menu" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
 </label>
@@ -9,8 +9,8 @@
 {{define "main"}}<h1 class="title">{{.Title}}</h1>
 {{if .Description}}<p class="subtitle">{{.Description}}</p>
 {{end}}<p class="date">{{.LongDate}}</p>
-{{if gt (len .TOC) 1}}<nav class="toc" aria-label="Contents">
-<h2>Contents</h2>
+{{if gt (len .TOC) 1}}<nav class="toc" aria-label="contents">
+<h2>contents</h2>
 <ol>
 {{range .TOC}}<li><a href="#{{.ID}}">{{.Text}}</a></li>
 {{end}}</ol>

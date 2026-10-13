@@ -41,7 +41,7 @@ type Heading struct {
 
 func (p Post) Year() int        { return p.Time.Year() }
 func (p Post) Date() string     { return p.Time.Format("02-01-2006") }
-func (p Post) LongDate() string { return p.Time.Format("2 January 2006") }
+func (p Post) LongDate() string { return strings.ToLower(p.Time.Format("2 January 2006")) }
 
 // Year groups the posts published in one year.
 type Year struct {
@@ -58,10 +58,11 @@ type Year struct {
 //	              nephroid, deltoid, astroid, ... (static/js/cycloid.js)
 //	"mandelbrot": one line closing in on the Mandelbrot set's boundary
 //	              (static/js/mandelbrot.js)
-//	"cycloid-horizontal": a circle rolling along a line; its pen moves
-//	              every few seconds, drawing normal, curtate and prolate
-//	              cycloids (static/js/cycloid-horizontal.js)
-const animation = "curve"
+//	"cycloid-horizontal": a circle rolling along a line, end to end and
+//	              back without stopping; around each turn its pen moves,
+//	              drawing normal, curtate and prolate cycloids
+//	              (static/js/cycloid-horizontal.js)
+const animation = "cycloid-horizontal"
 
 var animations = []string{"shapes", "curve", "cycloid", "mandelbrot", "cycloid-horizontal"}
 
@@ -268,7 +269,7 @@ func writeFeed(out string, posts []Post) {
 	}
 	feed.Version = "2.0"
 	feed.Content = "http://purl.org/rss/1.0/modules/content/"
-	feed.Channel = channel{Title: "obk", Link: siteURL + "/", Description: "Notes on systems, tooling, building, learning, and navigating in life."}
+	feed.Channel = channel{Title: "obk", Link: siteURL + "/", Description: "notes on systems, tooling, building, learning, and navigating in life."}
 	for _, p := range posts {
 		link := siteURL + "/posts/" + p.Slug + "/"
 		feed.Channel.Items = append(feed.Channel.Items, item{
@@ -346,9 +347,9 @@ func main() {
 	// writings; writings lists all posts by year.
 	about := parse("content/about.md")
 	render("index.html", "public/index.html",
-		Page{Title: "obk", Description: "Notes on systems, tooling, building, learning, and navigating in life.", Intro: about.Body, Animation: animation})
+		Page{Title: "obk", Description: "notes on systems, tooling, building, learning, and navigating in life.", Intro: about.Body, Animation: animation})
 	render("writings.html", "public/writings/index.html",
-		Page{Title: "Writings", Years: groupByYear(posts), Up: upHome})
+		Page{Title: "writings", Years: groupByYear(posts), Up: upHome})
 
 	writeFeed("public/feed.xml", posts)
 
@@ -359,7 +360,7 @@ func main() {
 		Page{Title: contact.Title, Description: contact.Description, Post: contact, Animation: animation, Up: upHome})
 
 	// Cloudflare Pages serves public/404.html for any path that doesn't exist.
-	render("404.html", "public/404.html", Page{Title: "Page not found"})
+	render("404.html", "public/404.html", Page{Title: "page not found"})
 	log.Printf("built %d posts, writings, about, contact, 404 -> public/", len(posts))
 
 	if *serve != "" {

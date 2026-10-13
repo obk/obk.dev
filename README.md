@@ -93,10 +93,11 @@ darioamodei.com.
     closing in on the set's boundary. Each is traced once at load, by
     following z_n(c) = 2·e^(i·2^(n-1)·θ) round in small steps; θ is the same
     on every curve, so morphs move each point a short way.
-  - cycloid-horizontal: a circle rolls along a line; every 2.5 s its pen
-    slides along the spoke, from the rim (cycloid) to inside (curtate) to
-    outside (prolate, with loops). The trail keeps the shape it was drawn
-    with and runs off to the left; the line fades at both ends.
+  - cycloid-horizontal: a circle rolls along a line, end to end and back,
+    at a steady pace with quick turns and no stops. Around each turn its pen
+    slides along the spoke to the next kind, starting while it still rolls:
+    on the rim (cycloid), inside (curtate), outside (prolate, with loops).
+    The last pass's trail fades as the next is drawn.
   - All but shapes start as a dot. `loop.js` pauses them off screen, shows
     a still frame under reduced motion, and carries the time between
     pages; without JavaScript they're hidden.
