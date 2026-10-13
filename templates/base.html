@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.Title}}</title>
-<link rel="preload" href="/fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{.FontPreload}}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/site.css">
 <link rel="icon" href="/images/favicon.ico">
 <link rel="alternate" type="application/rss+xml" title="obk" href="/feed.xml">
@@ -14,7 +15,7 @@
 {{end}}<meta property="og:site_name" content="obk">
 </head>
 <body>
-{{block "toc-state" .}}{{end}}<div class="page{{block "page-class" .}}{{end}}">
+{{block "toc-state" .}}{{end}}<div class="page{{block "page-class" .}}{{end}}{{if .Animation}} centered{{end}}">
 {{block "toc-toggle" .}}{{end}}<main>
 {{template "main" .}}
 {{with .Up}}<p class="back"><a href="{{.URL}}">&larr; Back to {{.Name}}</a></p>
@@ -24,7 +25,40 @@
 </html>
 {{end}}
 
-{{/* The spinning shapes (static/js/shapes.js), hidden until the script runs. */}}
+{{/* The animation on top of home and contact, picked by animation in main.go.
+   Each is hidden until its script runs; static/js/loop.js runs them all. */}}
+{{define "animation"}}{{with .Animation}}<script src="/js/loop.js"></script>
+{{if eq . "shapes"}}{{template "shapes"}}{{else if eq . "curve"}}{{template "curve"}}{{else if eq . "cycloid"}}{{template "cycloid"}}{{else if eq . "mandelbrot"}}{{template "mandelbrot"}}{{else if eq . "cycloid-horizontal"}}{{template "cycloid-horizontal"}}{{end}}{{end}}{{end}}
+
+{{/* Spinning ASCII shapes (static/js/shapes.js). */}}
 {{define "shapes"}}<pre class="shapes" id="shapes" aria-hidden="true" hidden></pre>
 <script src="/js/shapes.js"></script>
+{{end}}
+
+{{/* One line looping through Lissajous figures and rose curves
+   (static/js/curve.js). */}}
+{{define "curve"}}<svg class="curve" id="curve" viewBox="-1.08 -1.08 2.16 2.16" aria-hidden="true" hidden><path/></svg>
+<script src="/js/curve.js"></script>
+{{end}}
+
+{{/* A circle rolling round another, its pen drawing epicycloids and
+   hypocycloids (static/js/cycloid.js). */}}
+{{define "cycloid"}}<svg class="curve" id="cycloid" viewBox="-1.08 -1.08 2.16 2.16" aria-hidden="true" hidden><circle class="fixed faint" cx="0" cy="0" r="0"/><circle class="rolling faint" r="0"/><path class="spoke faint"/><path class="line"/><circle class="pen" r="0.022"/></svg>
+<script src="/js/cycloid.js"></script>
+{{end}}
+
+{{/* One line closing in on the Mandelbrot set's boundary
+   (static/js/mandelbrot.js). */}}
+{{define "mandelbrot"}}<svg class="curve" id="mandelbrot" viewBox="-2.1 -1.6 3.2 3.2" aria-hidden="true" hidden><path/></svg>
+<script src="/js/mandelbrot.js"></script>
+{{end}}
+
+{{/* A circle rolling along a line, its pen drawing normal, curtate and
+   prolate cycloids (static/js/cycloid-horizontal.js). The line and the trail
+   fade out at both ends. */}}
+{{define "cycloid-horizontal"}}<svg class="curve" id="cycloid-horizontal" viewBox="-2.2 -1.4 4.4 1.8" aria-hidden="true" hidden>
+<defs><linearGradient id="ch-fade" x1="-2.2" x2="2.2" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.25" stop-color="#fff"/><stop offset="0.75" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<mask id="ch-mask"><rect x="-2.2" y="-1.4" width="4.4" height="1.8" fill="url(#ch-fade)"/></mask></defs>
+<g mask="url(#ch-mask)"><path class="ground faint"/><path class="line"/></g><circle class="rolling faint" cx="0" r="0"/><path class="spoke faint"/><circle class="pen" r="0.03"/></svg>
+<script src="/js/cycloid-horizontal.js"></script>
 {{end}}

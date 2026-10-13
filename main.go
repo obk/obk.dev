@@ -15,6 +15,7 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -48,6 +49,30 @@ type Year struct {
 	Posts []Post
 }
 
+// animation is what home and contact show on top, centered:
+//
+//	"shapes":     spinning ASCII shapes that morph (static/js/shapes.js)
+//	"curve":      a dot that becomes a line, then loops through Lissajous
+//	              figures and rose curves (static/js/curve.js)
+//	"cycloid":    a circle rolling round another; its pen draws cardioid,
+//	              nephroid, deltoid, astroid, ... (static/js/cycloid.js)
+//	"mandelbrot": one line closing in on the Mandelbrot set's boundary
+//	              (static/js/mandelbrot.js)
+//	"cycloid-horizontal": a circle rolling along a line; its pen moves
+//	              every few seconds, drawing normal, curtate and prolate
+//	              cycloids (static/js/cycloid-horizontal.js)
+const animation = "curve"
+
+var animations = []string{"shapes", "curve", "cycloid", "mandelbrot", "cycloid-horizontal"}
+
+// The fonts, by the family name fonts.google.com shows: one for text, one
+// for code. The build downloads them from Google Fonts (fonts.go) and the
+// site serves them itself.
+const (
+	textFont = "Newsreader"
+	monoFont = "IBM Plex Mono"
+)
+
 // Link is a link to another page of the site.
 type Link struct{ URL, Name string }
 
@@ -61,8 +86,9 @@ type Page struct {
 	Title, Description string
 	Intro              template.HTML
 	Years              []Year
-	Shapes             bool  // show the spinning shapes on top (page.html)
-	Up                 *Link // the "← Back to" link at the bottom; nil for none
+	Animation          string // on top of home and contact: see animation; "" for none
+	Up                 *Link  // the "← Back to" link at the bottom; nil for none
+	FontPreload        string // set by render: the font file every page needs first
 	Post
 }
 
@@ -203,7 +229,11 @@ func groupByYear(posts []Post) []Year {
 	return years
 }
 
+// fontPreload is the font file to preload on every page, from buildFonts.
+var fontPreload string
+
 func render(tpl, out string, data Page) {
+	data.FontPreload = fontPreload
 	t := template.Must(template.ParseFiles("templates/base.html", "templates/"+tpl))
 	must(os.MkdirAll(filepath.Dir(out), 0o755))
 	f, err := os.Create(out)
@@ -301,8 +331,10 @@ func main() {
 	serve := flag.String("serve", "", "after building, serve public/ on this address (e.g. :8000)")
 	flag.Parse()
 
+	assert(slices.Contains(animations, animation), "animation is %q, want one of %q", animation, animations)
 	must(os.RemoveAll("public"))
 	copyDir("static", "public")
+	fontPreload = buildFonts("public/fonts", "public/css/fonts.css", textFont, monoFont)
 
 	// Posts: content/posts/*.md, newest first.
 	posts := loadPosts("content/posts")
@@ -314,7 +346,7 @@ func main() {
 	// writings; writings lists all posts by year.
 	about := parse("content/about.md")
 	render("index.html", "public/index.html",
-		Page{Title: "obk", Description: "Notes on systems, tooling, building, learning, and navigating in life.", Intro: about.Body})
+		Page{Title: "obk", Description: "Notes on systems, tooling, building, learning, and navigating in life.", Intro: about.Body, Animation: animation})
 	render("writings.html", "public/writings/index.html",
 		Page{Title: "Writings", Years: groupByYear(posts), Up: upHome})
 
@@ -324,7 +356,7 @@ func main() {
 		Page{Title: about.Title, Description: about.Description, Post: about, Up: upHome})
 	contact := parse("content/contact.md")
 	render("page.html", "public/contact/index.html",
-		Page{Title: contact.Title, Description: contact.Description, Post: contact, Shapes: true, Up: upHome})
+		Page{Title: contact.Title, Description: contact.Description, Post: contact, Animation: animation, Up: upHome})
 
 	// Cloudflare Pages serves public/404.html for any path that doesn't exist.
 	render("404.html", "public/404.html", Page{Title: "Page not found"})

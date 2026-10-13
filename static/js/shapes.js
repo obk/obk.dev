@@ -213,44 +213,15 @@
 
   // --- Loop ------------------------------------------------------------------
 
-  // Time only advances while the animation runs, and by at most 0.1 s a frame,
-  // so it resumes where it stopped after scrolling away or switching tabs.
-  const still = matchMedia("(prefers-reduced-motion: reduce)");
-  let t = 0.6, last = null, raf = 0, visible = true;
-
-  function tick(now) {
-    if (last !== null) t += Math.min(now - last, 100) / 1000;
-    last = now;
-    draw(t);
-    raf = requestAnimationFrame(tick);
-  }
-
-  function update() {
-    const run = visible && !still.matches;
-    if (run && !raf) {
-      raf = requestAnimationFrame(tick);
-    } else if (!run && raf) {
-      cancelAnimationFrame(raf);
-      raf = 0;
-      last = null;
-    }
-  }
-
-  pre.hidden = false;
+  pre.hidden = false; // layout() measures it, so show it first
   layout();
-  draw(t);
+  const redraw = animate(pre, "shapes-time", draw, { start: 0.6 });
   new ResizeObserver(() => {
     layout();
-    draw(t);
+    redraw();
   }).observe(pre);
   document.fonts.ready.then(() => {
     layout();
-    draw(t);
+    redraw();
   });
-  new IntersectionObserver((es) => {
-    visible = es[es.length - 1].isIntersecting;
-    update();
-  }).observe(pre);
-  still.addEventListener("change", update);
-  update();
 })();

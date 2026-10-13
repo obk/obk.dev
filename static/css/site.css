@@ -1,81 +1,7 @@
 /* ==========================================================================
-   Fonts, self-hosted from static/fonts/ (both OFL).
-   Newsreader: variable (weight + optical size), for all text.
-   IBM Plex Mono: 400 and 600, for code.
-   Each face is split into latin and latin-ext so only what's used loads.
+   Fonts: --font-text and --font-mono, with their @font-face rules, come from
+   css/fonts.css, which fonts.go writes from Google Fonts at build time.
    ========================================================================== */
-
-@font-face {
-  font-family: Newsreader;
-  src: url("/fonts/newsreader-latin-opsz-normal.woff2") format("woff2");
-  font-weight: 200 800;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: Newsreader;
-  src: url("/fonts/newsreader-latin-ext-opsz-normal.woff2") format("woff2");
-  font-weight: 200 800;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-  font-family: Newsreader;
-  src: url("/fonts/newsreader-latin-opsz-italic.woff2") format("woff2");
-  font-weight: 200 800;
-  font-style: italic;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: Newsreader;
-  src: url("/fonts/newsreader-latin-ext-opsz-italic.woff2") format("woff2");
-  font-weight: 200 800;
-  font-style: italic;
-  font-display: swap;
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-  font-family: "IBM Plex Mono";
-  src: url("/fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "IBM Plex Mono";
-  src: url("/fonts/ibm-plex-mono-latin-ext-400-normal.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-  font-family: "IBM Plex Mono";
-  src: url("/fonts/ibm-plex-mono-latin-600-normal.woff2") format("woff2");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "IBM Plex Mono";
-  src: url("/fonts/ibm-plex-mono-latin-ext-600-normal.woff2") format("woff2");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
 
 
 /* ==========================================================================
@@ -124,14 +50,17 @@
   box-sizing: border-box;
 }
 
+/* Keep room for the scrollbar on every page, so pages that scroll and pages
+   that don't line up: the animation holds still from home to contact. */
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font:
-    400 1.25rem/1.6 Newsreader,
-    "Times New Roman",
-    serif;
+  font: 400 1.25rem/1.6 var(--font-text);
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   counter-reset: sn; /* sidenote numbers */
@@ -287,11 +216,11 @@ blockquote footer {
 
 /* --- Code ----------------------------------------------------------------- */
 
-/* Plex Mono looks large next to the serif, so it runs a size down.
+/* Monospace looks large next to the text font, so it runs a size down.
    No ligatures: code reads exactly as typed. */
 code,
 pre {
-  font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.84em;
   line-height: 1.55;
   font-variant-ligatures: none;
@@ -608,6 +537,43 @@ pre.shapes {
   }
 }
 
+/* --- Line animations: curve, cycloid, mandelbrot (static/js/) ------------- */
+
+svg.curve {
+  width: min(100%, 20rem);
+  margin: 0 auto 2.5rem;
+}
+
+svg.curve[hidden] {
+  display: none;
+}
+
+svg.curve path,
+svg.curve circle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2px; /* the scripts keep their starting dot's 1.2 in step */
+  stroke-linecap: round; /* so the starting dot shows */
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Cycloid on a line: wide, not square. */
+svg#cycloid-horizontal {
+  width: min(100%, 34rem);
+}
+
+/* Cycloids: the circles, the spoke and the ground, behind the curve. */
+svg.curve .faint {
+  stroke-opacity: 0.35;
+}
+
+/* Cycloid: the pen. */
+svg.curve .pen {
+  fill: currentColor;
+  stroke: none;
+}
+
 /* --- Section headings and link lists (writings, 404) ---------------------- */
 
 h2.section {
@@ -627,10 +593,41 @@ ul.links .date {
   margin-left: 0.4em;
 }
 
+/* --- Centered pages: home and contact (those with an animation) ----------- */
+
+/* Text centered. The animation sits at the same height on both pages, its
+   middle at 42% of the window, so it holds still between them; the text
+   follows below it. --art is the animation's height. */
+.page.centered {
+  --art: min(calc(100vw - 32px), 20rem); /* svg.curve, square */
+  padding-top: max(2rem, calc(42svh - var(--art) / 2));
+  text-align: center;
+}
+
+.page.centered:has(pre.shapes) {
+  --art: min(60vh, 34rem);
+}
+
+.page.centered:has(#cycloid-horizontal) {
+  --art: calc(min(100vw - 32px, 34rem) * 1.8 / 4.4); /* its viewBox's shape */
+}
+
+@media (max-width: 30rem) {
+  .page.centered:has(pre.shapes) {
+    --art: min(48vh, 22rem);
+  }
+}
+
+.page.centered ul {
+  padding: 0;
+  list-style: none;
+}
+
 /* --- Home: contact and writings, side by side ----------------------------- */
 
 .home-links {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 0.5em 1.5em;
 }
@@ -643,6 +640,32 @@ p.back {
 
 p.back a {
   text-decoration: none;
+}
+
+
+/* ==========================================================================
+   Moving between pages: a short crossfade, where the browser supports it
+   (Chrome, Safari). The animation is its own layer and swaps over at once:
+   the new page has already picked up its time, so it doesn't jump.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+pre.shapes,
+svg.curve {
+  view-transition-name: art;
+}
+
+::view-transition-old(art) {
+  display: none;
+}
+
+::view-transition-new(art) {
+  animation: none;
 }
 
 

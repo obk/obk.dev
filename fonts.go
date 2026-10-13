@@ -1,0 +1,201 @@
+// Fonts from Google Fonts, served from this site.
+//
+// The build asks Google Fonts for the families named in main.go, downloads
+// the font files into public/fonts/ and writes public/css/fonts.css to match.
+// Pages only ever load fonts from this site; visitors never contact Google.
+//
+// Variable fonts come with their full weight range (and optical size, if
+// they have it); static fonts with the few weights the CSS uses. Only the
+// subsets in fontSubsets are kept. Everything downloaded is cached in
+// .cache/fonts/, so later builds work offline; delete it to fetch afresh.
+package main
+
+import (
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"net/url"
+	"os"
+	"path/filepath"
+	"regexp"
+	"slices"
+	"strings"
+	"time"
+)
+
+// font is a Google Fonts family, by the name fonts.google.com shows, and
+// its role: "text" or "mono", the CSS variable --font-<role>.
+type font struct{ family, role string }
+
+// fontSubsets are the character sets kept; the others are left out.
+var fontSubsets = []string{"latin", "latin-ext"}
+
+// Weights to ask for when a family has no variable version: what site.css
+// uses for that role.
+var staticWeights = map[string][]int{"text": {400, 500, 600, 700}, "mono": {400, 600}}
+
+const fontCache = ".cache/fonts"
+
+// Google Fonts serves woff2 only to browsers it knows support it.
+const fontAgent = "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0"
+
+// fetch returns the body at u, from the cache if it's there.
+func fetch(u string) []byte {
+	sum := sha256.Sum256([]byte(u))
+	cached := filepath.Join(fontCache, hex.EncodeToString(sum[:8]))
+	if b, err := os.ReadFile(cached); err == nil {
+		return b
+	}
+	req, err := http.NewRequest("GET", u, nil)
+	must(err)
+	req.Header.Set("User-Agent", fontAgent)
+	client := &http.Client{Timeout: 60 * time.Second}
+	var b []byte
+	for try := 1; ; try++ {
+		resp, err := client.Do(req)
+		if err == nil {
+			b, err = io.ReadAll(resp.Body)
+			resp.Body.Close()
+			if err == nil && resp.StatusCode != http.StatusOK {
+				err = fmt.Errorf("%s", resp.Status)
+			}
+		}
+		if err == nil {
+			break
+		}
+		if try == 3 {
+			log.Fatalf("fonts: %s: %v", u, err)
+		}
+		time.Sleep(time.Duration(try) * time.Second)
+	}
+	must(os.MkdirAll(fontCache, 0o755))
+	must(os.WriteFile(cached, b, 0o644))
+	return b
+}
+
+// familyInfo is what Google Fonts' public metadata says about a family.
+type familyInfo struct {
+	Family   string
+	Category string // "Serif", "Sans Serif", "Monospace", "Display", "Handwriting"
+	Axes     []struct {
+		Tag      string
+		Min, Max float64
+	}
+	Fonts map[string]any // styles it has: "400", "400i", "700", ...
+}
+
+func familyMeta(family string) familyInfo {
+	raw := string(fetch("https://fonts.google.com/metadata/fonts"))
+	var meta struct{ FamilyMetadataList []familyInfo }
+	must(json.Unmarshal([]byte(raw[strings.Index(raw, "{"):]), &meta))
+	for _, f := range meta.FamilyMetadataList {
+		if f.Family == family {
+			return f
+		}
+	}
+	log.Fatalf("fonts: no family %q on Google Fonts; use the name fonts.google.com shows", family)
+	return familyInfo{}
+}
+
+// cssQuery is the family parameter for the Google Fonts CSS API, e.g.
+// "Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800".
+func cssQuery(f font, info familyInfo) string {
+	_, italic := info.Fonts["400i"]
+	ital := []string{"0"}
+	if italic {
+		ital = append(ital, "1")
+	}
+	tags, ranges := []string{"ital"}, []string{}
+	for _, a := range info.Axes {
+		if a.Tag == "opsz" || a.Tag == "wght" { // the axes the CSS uses; ital, opsz, wght is sorted
+			tags = append(tags, a.Tag)
+			ranges = append(ranges, fmt.Sprintf("%g..%g", a.Min, a.Max))
+		}
+	}
+	var tuples []string
+	if slices.Contains(tags, "wght") {
+		for _, i := range ital {
+			tuples = append(tuples, strings.Join(append([]string{i}, ranges...), ","))
+		}
+	} else {
+		// Static: the weights this role uses that the family has. Italic only
+		// at 400, for emphasis in running text.
+		tags, tuples = []string{"ital", "wght"}, nil
+		for _, w := range staticWeights[f.role] {
+			if _, ok := info.Fonts[fmt.Sprint(w)]; ok {
+				tuples = append(tuples, fmt.Sprintf("0,%d", w))
+			}
+		}
+		if italic && f.role == "text" {
+			tuples = append(tuples, "1,400")
+		}
+		if len(tuples) == 0 {
+			return f.family
+		}
+	}
+	return fmt.Sprintf("%s:%s@%s", f.family, strings.Join(tags, ","), strings.Join(tuples, ";"))
+}
+
+var (
+	faceRule = regexp.MustCompile(`/\* ([^*]+) \*/\s*@font-face \{([^}]*)\}`)
+	faceURL  = regexp.MustCompile(`url\((https://[^)]+)\)`)
+	faceProp = regexp.MustCompile(`(font-style|font-weight): ([^;]+);`)
+	nonSlug  = regexp.MustCompile(`[^a-z0-9]+`)
+)
+
+// buildFonts downloads the fonts into dir (served at /fonts/), writes their
+// stylesheet to css, and returns the file to preload: the text font's latin
+// upright face, which nearly every page uses first.
+func buildFonts(dir, css, text, mono string) (preload string) {
+	must(os.MkdirAll(dir, 0o755))
+	var out strings.Builder
+	out.WriteString("/* Generated by fonts.go from Google Fonts; see there. */\n\n")
+	vars := map[string]string{}
+	for _, f := range []font{{text, "text"}, {mono, "mono"}} {
+		info := familyMeta(f.family)
+		sheet := string(fetch("https://fonts.googleapis.com/css2?display=swap&family=" + url.QueryEscape(cssQuery(f, info))))
+		slug := nonSlug.ReplaceAllString(strings.ToLower(f.family), "-")
+		faces := 0
+		for _, m := range faceRule.FindAllStringSubmatch(sheet, -1) {
+			subset, body := m[1], m[2]
+			if !slices.Contains(fontSubsets, subset) {
+				continue
+			}
+			src := faceURL.FindStringSubmatch(body)
+			assert(src != nil, "fonts: %s %s: no font URL", f.family, subset)
+			props := map[string]string{}
+			for _, p := range faceProp.FindAllStringSubmatch(body, -1) {
+				props[p[1]] = p[2]
+			}
+			// One file per subset, style and weight (range).
+			name := fmt.Sprintf("%s-%s-%s-%s.woff2", slug, subset, props["font-style"], strings.ReplaceAll(props["font-weight"], " ", "-"))
+			must(os.WriteFile(filepath.Join(dir, name), fetch(src[1]), 0o644))
+			body = strings.Replace(body, src[0], "url(/fonts/"+name+")", 1)
+			fmt.Fprintf(&out, "/* %s */\n@font-face {%s}\n\n", subset, body)
+			if f.role == "text" && subset == "latin" && props["font-style"] == "normal" && preload == "" {
+				preload = "/fonts/" + name
+			}
+			faces++
+		}
+		assert(faces > 0, "fonts: %s: none of the subsets %v", f.family, fontSubsets)
+		fallback := map[string]string{
+			"Serif": `"Times New Roman", serif`, "Sans Serif": "system-ui, sans-serif",
+			"Monospace": "ui-monospace, Menlo, Consolas, monospace", "Handwriting": "cursive",
+		}[info.Category]
+		if fallback == "" {
+			fallback = "sans-serif"
+		}
+		if f.role == "mono" {
+			fallback = "ui-monospace, Menlo, Consolas, monospace"
+		}
+		vars[f.role] = fmt.Sprintf("%q, %s", f.family, fallback)
+	}
+	fmt.Fprintf(&out, ":root {\n  --font-text: %s;\n  --font-mono: %s;\n}\n", vars["text"], vars["mono"])
+	must(os.MkdirAll(filepath.Dir(css), 0o755))
+	must(os.WriteFile(css, []byte(out.String()), 0o644))
+	return preload
+}
