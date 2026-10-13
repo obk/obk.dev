@@ -34,7 +34,7 @@ animation = "nautilus"
 
 # The animations "custom" picks from, e.g. ["curve", "cycloid", "ford"].
 # Ignored unless animation is "custom".
-custom = []
+custom = ["nautilus", "curve", "shapes"]
 
 # Page views by goatcounter.com: your site's count URL, or "" for none.
 goatcounter = ""
