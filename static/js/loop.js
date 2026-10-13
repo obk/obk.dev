@@ -67,3 +67,31 @@ function animate(el, key, draw, { start = 0, still = start } = {}) {
   update();
   return () => draw(t);
 }
+
+// With animation = "random" (config.toml), the page holds every animation and
+// pickArt chooses one, before any of them runs: once per visit, so home and
+// contact show the same one, and where it can, not the one from last visit.
+// The choice goes on <html data-art>.
+function pickArt(names) {
+  let art = null, last = null;
+  try {
+    art = sessionStorage.getItem("art");
+    last = localStorage.getItem("art-last");
+  } catch {}
+  if (!names.includes(art)) {
+    const pool = names.length > 1 ? names.filter((n) => n !== last) : names;
+    art = pool[Math.floor(Math.random() * pool.length)];
+    try {
+      sessionStorage.setItem("art", art);
+      localStorage.setItem("art-last", art);
+    } catch {}
+  }
+  document.documentElement.dataset.art = art;
+}
+
+// Whether the animation called name should run: always, unless pickArt
+// chose another.
+function shown(name) {
+  const art = document.documentElement.dataset.art;
+  return !art || art === name;
+}

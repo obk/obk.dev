@@ -11,7 +11,7 @@
 "use strict";
 (() => {
   const svg = document.getElementById("mandelbrot");
-  if (!svg) return;
+  if (!svg || !shown("mandelbrot")) return;
   const path = svg.querySelector("path");
 
   const M = 8192; // points per curve

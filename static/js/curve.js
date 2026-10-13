@@ -7,7 +7,7 @@
 "use strict";
 (() => {
   const svg = document.getElementById("curve");
-  if (!svg) return;
+  if (!svg || !shown("curve")) return;
   const path = svg.querySelector("path");
 
   const N = 1200; // points along the line

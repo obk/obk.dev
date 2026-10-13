@@ -1,6 +1,6 @@
 // Fonts from Google Fonts, served from this site.
 //
-// The build asks Google Fonts for the families named in main.go, downloads
+// The build asks Google Fonts for the families named in config.toml, downloads
 // the font files into public/fonts/ and writes public/css/fonts.css to match.
 // Pages only ever load fonts from this site; visitors never contact Google.
 //

@@ -8,11 +8,11 @@
 <link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/site.css">
 <link rel="icon" href="/images/favicon.ico">
-<link rel="alternate" type="application/rss+xml" title="obk" href="/feed.xml">
+<link rel="alternate" type="application/rss+xml" title="{{.Site.Title}}" href="/feed.xml">
 <meta property="og:title" content="{{.Title}}">
 {{if .Description}}<meta name="description" content="{{.Description}}">
 <meta property="og:description" content="{{.Description}}">
-{{end}}<meta property="og:site_name" content="obk">
+{{end}}<meta property="og:site_name" content="{{.Site.Title}}">
 </head>
 <body>
 {{block "toc-state" .}}{{end}}<div class="page{{block "page-class" .}}{{end}}{{if .Animation}} centered{{end}}">
@@ -21,14 +21,17 @@
 {{with .Up}}<p class="back"><a href="{{.URL}}">&larr; back to {{.Name}}</a></p>
 {{end}}</main>
 </div>
-</body>
+{{with .Site.GoatCounter}}<script data-goatcounter="{{.}}" async src="//gc.zgo.at/count.js"></script>
+{{end}}</body>
 </html>
 {{end}}
 
-{{/* The animation on top of home and contact, picked by animation in main.go.
-   Each is hidden until its script runs; static/js/loop.js runs them all. */}}
+{{/* The animation on top of home and contact, picked by animation in config.toml.
+   Each is hidden until its script runs; static/js/loop.js runs them all.
+   "random" puts them all on the page and pickArt shows one. */}}
 {{define "animation"}}{{with .Animation}}<script src="/js/loop.js"></script>
-{{if eq . "shapes"}}{{template "shapes"}}{{else if eq . "curve"}}{{template "curve"}}{{else if eq . "cycloid"}}{{template "cycloid"}}{{else if eq . "mandelbrot"}}{{template "mandelbrot"}}{{else if eq . "cycloid-horizontal"}}{{template "cycloid-horizontal"}}{{end}}{{end}}{{end}}
+{{if eq . "random"}}<script>pickArt({{$.Animations}})</script>
+{{template "shapes"}}{{template "curve"}}{{template "cycloid"}}{{template "mandelbrot"}}{{template "cycloid-horizontal"}}{{template "medley"}}{{else if eq . "shapes"}}{{template "shapes"}}{{else if eq . "curve"}}{{template "curve"}}{{else if eq . "cycloid"}}{{template "cycloid"}}{{else if eq . "mandelbrot"}}{{template "mandelbrot"}}{{else if eq . "cycloid-horizontal"}}{{template "cycloid-horizontal"}}{{else if eq . "medley"}}{{template "medley"}}{{end}}{{end}}{{end}}
 
 {{/* Spinning ASCII shapes (static/js/shapes.js). */}}
 {{define "shapes"}}<pre class="shapes" id="shapes" aria-hidden="true" hidden></pre>
@@ -61,4 +64,13 @@
 <mask id="ch-mask"><rect x="-2.2" y="-1.4" width="4.4" height="1.8" fill="url(#ch-fade)"/></mask></defs>
 <g mask="url(#ch-mask)"><path class="ground faint"/><path class="old"/><path class="line"/></g><circle class="rolling faint" cx="0" r="0"/><path class="spoke faint"/><circle class="pen" r="0.03"/></svg>
 <script src="/js/cycloid-horizontal.js"></script>
+{{end}}
+
+{{/* curve, cycloid and cycloid-horizontal as one, one line throughout
+   (static/js/medley.js). The base is the fixed circle, then the ground. */}}
+{{define "medley"}}<svg class="curve" id="medley" viewBox="-1.6 -1.08 3.2 2.16" aria-hidden="true" hidden>
+<defs><linearGradient id="md-fade" x1="-1.6" x2="1.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.1" stop-color="#fff"/><stop offset="0.9" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<mask id="md-mask"><rect x="-1.6" y="-1.08" width="3.2" height="2.16" fill="url(#md-fade)"/></mask></defs>
+<g mask="url(#md-mask)"><path class="base faint"/><path class="old"/><path class="line"/></g><circle class="rolling faint" r="0"/><path class="spoke faint"/><circle class="pen" r="0.022"/></svg>
+<script src="/js/medley.js"></script>
 {{end}}

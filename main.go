@@ -20,6 +20,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/BurntSushi/toml"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
@@ -49,30 +50,43 @@ type Year struct {
 	Posts []Post
 }
 
-// animation is what home and contact show on top, centered:
-//
-//	"shapes":     spinning ASCII shapes that morph (static/js/shapes.js)
-//	"curve":      a dot that becomes a line, then loops through Lissajous
-//	              figures and rose curves (static/js/curve.js)
-//	"cycloid":    a circle rolling round another; its pen draws cardioid,
-//	              nephroid, deltoid, astroid, ... (static/js/cycloid.js)
-//	"mandelbrot": one line closing in on the Mandelbrot set's boundary
-//	              (static/js/mandelbrot.js)
-//	"cycloid-horizontal": a circle rolling along a line, end to end and
-//	              back without stopping; around each turn its pen moves,
-//	              drawing normal, curtate and prolate cycloids
-//	              (static/js/cycloid-horizontal.js)
-const animation = "cycloid-horizontal"
+// Config is config.toml, the site's settings; see there.
+type Config struct {
+	Title       string `toml:"title"`
+	URL         string `toml:"url"`
+	Description string `toml:"description"`
+	Animation   string `toml:"animation"`
+	GoatCounter string `toml:"goatcounter"`
+	Fonts       struct {
+		Text string `toml:"text"`
+		Mono string `toml:"mono"`
+	} `toml:"fonts"`
+	License struct {
+		Name string `toml:"name"`
+		URL  string `toml:"url"`
+	} `toml:"license"`
+}
 
-var animations = []string{"shapes", "curve", "cycloid", "mandelbrot", "cycloid-horizontal"}
+// The animations config.toml can name, besides "random" and "".
+var animations = []string{"shapes", "curve", "cycloid", "mandelbrot", "cycloid-horizontal", "medley"}
 
-// The fonts, by the family name fonts.google.com shows: one for text, one
-// for code. The build downloads them from Google Fonts (fonts.go) and the
-// site serves them itself.
-const (
-	textFont = "Newsreader"
-	monoFont = "IBM Plex Mono"
-)
+// loadConfig reads and checks config.toml.
+func loadConfig(path string) *Config {
+	var c Config
+	md, err := toml.DecodeFile(path, &c)
+	if err != nil {
+		log.Fatalf("%s: %v", path, err)
+	}
+	if keys := md.Undecoded(); len(keys) > 0 {
+		log.Fatalf("%s: unknown settings %q", path, keys)
+	}
+	c.URL = strings.TrimSuffix(c.URL, "/")
+	assert(c.Title != "" && c.URL != "", "%s: title and url are required", path)
+	assert(c.Animation == "" || c.Animation == "random" || slices.Contains(animations, c.Animation),
+		"%s: animation is %q, want \"random\", \"\" or one of %q", path, c.Animation, animations)
+	assert(c.Fonts.Text != "" && c.Fonts.Mono != "", "%s: [fonts] text and mono are required", path)
+	return &c
+}
 
 // Link is a link to another page of the site.
 type Link struct{ URL, Name string }
@@ -87,9 +101,11 @@ type Page struct {
 	Title, Description string
 	Intro              template.HTML
 	Years              []Year
-	Animation          string // on top of home and contact: see animation; "" for none
-	Up                 *Link  // the "← Back to" link at the bottom; nil for none
-	FontPreload        string // set by render: the font file every page needs first
+	Animation          string   // on top of home and contact (config.toml); "" for none
+	Up                 *Link    // the "← back to" link at the bottom; nil for none
+	Site               *Config  // set by render: config.toml
+	FontPreload        string   // set by render: the font file every page needs first
+	Animations         []string // set by render: the animations "random" picks from
 	Post
 }
 
@@ -230,11 +246,17 @@ func groupByYear(posts []Post) []Year {
 	return years
 }
 
-// fontPreload is the font file to preload on every page, from buildFonts.
-var fontPreload string
+// site is config.toml; fontPreload is the font file to preload on every
+// page, from buildFonts.
+var (
+	site        *Config
+	fontPreload string
+)
 
 func render(tpl, out string, data Page) {
+	data.Site = site
 	data.FontPreload = fontPreload
+	data.Animations = animations
 	t := template.Must(template.ParseFiles("templates/base.html", "templates/"+tpl))
 	must(os.MkdirAll(filepath.Dir(out), 0o755))
 	f, err := os.Create(out)
@@ -242,8 +264,6 @@ func render(tpl, out string, data Page) {
 	must(t.ExecuteTemplate(f, "base", data))
 	must(f.Close()) // a failed close can mean a lost write
 }
-
-const siteURL = "https://obk.dev"
 
 // writeFeed writes an RSS 2.0 feed of the posts (newest first) to out.
 func writeFeed(out string, posts []Post) {
@@ -259,6 +279,7 @@ func writeFeed(out string, posts []Post) {
 		Title       string `xml:"title"`
 		Link        string `xml:"link"`
 		Description string `xml:"description"`
+		Copyright   string `xml:"copyright,omitempty"`
 		Items       []item `xml:"item"`
 	}
 	var feed struct {
@@ -269,9 +290,12 @@ func writeFeed(out string, posts []Post) {
 	}
 	feed.Version = "2.0"
 	feed.Content = "http://purl.org/rss/1.0/modules/content/"
-	feed.Channel = channel{Title: "obk", Link: siteURL + "/", Description: "notes on systems, tooling, building, learning, and navigating in life."}
+	feed.Channel = channel{Title: site.Title, Link: site.URL + "/", Description: site.Description}
+	if site.License.Name != "" {
+		feed.Channel.Copyright = strings.TrimSpace(site.License.Name + " " + site.License.URL)
+	}
 	for _, p := range posts {
-		link := siteURL + "/posts/" + p.Slug + "/"
+		link := site.URL + "/posts/" + p.Slug + "/"
 		feed.Channel.Items = append(feed.Channel.Items, item{
 			Title: p.Title, Link: link, GUID: link, PubDate: p.Time.Format(time.RFC1123Z),
 			Description: p.Description, Content: string(p.Body),
@@ -332,10 +356,10 @@ func main() {
 	serve := flag.String("serve", "", "after building, serve public/ on this address (e.g. :8000)")
 	flag.Parse()
 
-	assert(slices.Contains(animations, animation), "animation is %q, want one of %q", animation, animations)
+	site = loadConfig("config.toml")
 	must(os.RemoveAll("public"))
 	copyDir("static", "public")
-	fontPreload = buildFonts("public/fonts", "public/css/fonts.css", textFont, monoFont)
+	fontPreload = buildFonts("public/fonts", "public/css/fonts.css", site.Fonts.Text, site.Fonts.Mono)
 
 	// Posts: content/posts/*.md, newest first.
 	posts := loadPosts("content/posts")
@@ -347,7 +371,7 @@ func main() {
 	// writings; writings lists all posts by year.
 	about := parse("content/about.md")
 	render("index.html", "public/index.html",
-		Page{Title: "obk", Description: "notes on systems, tooling, building, learning, and navigating in life.", Intro: about.Body, Animation: animation})
+		Page{Title: site.Title, Description: site.Description, Intro: about.Body, Animation: site.Animation})
 	render("writings.html", "public/writings/index.html",
 		Page{Title: "writings", Years: groupByYear(posts), Up: upHome})
 
@@ -357,7 +381,7 @@ func main() {
 		Page{Title: about.Title, Description: about.Description, Post: about, Up: upHome})
 	contact := parse("content/contact.md")
 	render("page.html", "public/contact/index.html",
-		Page{Title: contact.Title, Description: contact.Description, Post: contact, Animation: animation, Up: upHome})
+		Page{Title: contact.Title, Description: contact.Description, Post: contact, Animation: site.Animation, Up: upHome})
 
 	// Cloudflare Pages serves public/404.html for any path that doesn't exist.
 	render("404.html", "public/404.html", Page{Title: "page not found"})

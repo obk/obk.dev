@@ -558,9 +558,13 @@ svg.curve circle {
   vector-effect: non-scaling-stroke;
 }
 
-/* Cycloid on a line: wide, not square. */
+/* Cycloid on a line and the medley: wide, not square. */
 svg#cycloid-horizontal {
   width: min(100%, 34rem);
+}
+
+svg#medley {
+  width: min(100%, 30rem);
 }
 
 /* Cycloids: the circles, the spoke and the ground, behind the curve. */
@@ -604,16 +608,20 @@ ul.links .date {
   text-align: center;
 }
 
-.page.centered:has(pre.shapes) {
+.page.centered:has(pre.shapes:not([hidden])) {
   --art: min(60vh, 34rem);
 }
 
-.page.centered:has(#cycloid-horizontal) {
+.page.centered:has(#cycloid-horizontal:not([hidden])) {
   --art: calc(min(100vw - 32px, 34rem) * 1.8 / 4.4); /* its viewBox's shape */
 }
 
+.page.centered:has(#medley:not([hidden])) {
+  --art: calc(min(100vw - 32px, 30rem) * 2.16 / 3.2);
+}
+
 @media (max-width: 30rem) {
-  .page.centered:has(pre.shapes) {
+  .page.centered:has(pre.shapes:not([hidden])) {
     --art: min(48vh, 22rem);
   }
 }
@@ -630,6 +638,23 @@ ul.links .date {
   justify-content: center;
   flex-wrap: wrap;
   gap: 0.5em 1.5em;
+}
+
+/* --- The content license, under each post --------------------------------- */
+
+p.license {
+  margin: 3em 0 0;
+  color: var(--muted);
+  font-size: 0.8em;
+}
+
+p.license a {
+  color: inherit;
+}
+
+/* The back link follows it closely. */
+p.license + p.back {
+  margin-top: 1em;
 }
 
 /* --- "← Back to …", one level up, at the end of most pages ---------------- */

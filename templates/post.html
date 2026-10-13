@@ -18,4 +18,6 @@
 <script src="/js/toc.js" defer></script>
 {{end}}<div class="body">
 {{.Body}}
-</div>{{end}}
+</div>
+{{with .Site.License}}{{if .Name}}<p class="license">text and images: {{if .URL}}<a href="{{.URL}}" rel="license">{{.Name}}</a>{{else}}{{.Name}}{{end}}</p>
+{{end}}{{end}}{{end}}

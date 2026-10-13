@@ -6,7 +6,7 @@
 "use strict";
 (() => {
   const svg = document.getElementById("cycloid");
-  if (!svg) return;
+  if (!svg || !shown("cycloid")) return;
   const [fixed, rolling, spoke, curve, pen] = ["fixed", "rolling", "spoke", "line", "pen"].map((c) => svg.querySelector("." + c));
 
   const N = 900; // points along the curve

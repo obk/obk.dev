@@ -9,7 +9,7 @@
 "use strict";
 (() => {
   const svg = document.getElementById("cycloid-horizontal");
-  if (!svg) return;
+  if (!svg || !shown("cycloid-horizontal")) return;
   const [ground, rolling, spoke, old, trail, pen] = ["ground", "rolling", "spoke", "old", "line", "pen"].map((c) => svg.querySelector("." + c));
 
   const R = 0.5; // the rolling circle's radius

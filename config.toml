@@ -1,0 +1,40 @@
+# Site settings. The words themselves live in content/: about.md (home page
+# and /about/), contact.md and posts/. See README.md.
+
+# The site's name: home page title, feed title, link previews.
+title = "obk"
+
+# Where the site lives, without a trailing slash. The RSS feed links to it.
+url = "https://obk.dev"
+
+# One line about the site: home page description and feed description.
+description = "notes on systems, tooling, building, learning, and navigating in life."
+
+# What home and contact show on top:
+#   "shapes"              spinning ASCII shapes that morph into each other
+#   "curve"               one line looping through Lissajous figures and roses
+#   "cycloid"             a circle rolling round another, drawing cycloids
+#   "mandelbrot"          one line closing in on the Mandelbrot set's boundary
+#   "cycloid-horizontal"  a circle rolling along a line, drawing normal,
+#                         curtate and prolate cycloids
+#   "medley"              curve, cycloid and cycloid-horizontal as one,
+#                         one line morphing through all three
+#   "random"              one of these, picked once per visit
+#   ""                    nothing; home and contact aren't centered then
+animation = "curve"
+
+# Page views by goatcounter.com: your site's count URL, or "" for none.
+goatcounter = "https://obk.goatcounter.com/count"
+
+# The license for your writing and pictures, shown under each post and in
+# the feed. Leave name "" to show none. (The code is GPL v3; see LICENSE.)
+[license]
+name = "cc by-sa 4.0"
+url = "https://creativecommons.org/licenses/by-sa/4.0/"
+
+# Google Fonts family names, as fonts.google.com shows them. The build
+# downloads them and the site serves them itself; visitors never contact
+# Google.
+[fonts]
+text = "Newsreader"
+mono = "IBM Plex Mono"

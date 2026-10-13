@@ -5,7 +5,7 @@
 "use strict";
 (() => {
   const pre = document.getElementById("shapes");
-  if (!pre) return;
+  if (!pre || !shown("shapes")) return;
 
   const RAMP = ".,-~:;=!*#$@"; // dark to bright, as in donut.c
   const HOLD = 3.5; // seconds a shape spins on its own
