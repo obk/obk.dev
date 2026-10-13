@@ -117,7 +117,7 @@
 
 
 /* ==========================================================================
-   Base: page, header, type, links, lists.
+   Base: page, type, links, lists.
    ========================================================================== */
 
 * {
@@ -147,34 +147,12 @@ body {
 .page {
   max-width: 38.75rem;
   margin: 0 auto;
-  padding: 0 20px 6rem;
+  padding: 3rem 20px 6rem;
 }
 
 /* Posts get a wider column for reading. */
 .page.wide {
   max-width: 50rem;
-}
-
-/* --- Header: just the site name ------------------------------------------- */
-
-header.site {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 15px 0 25px;
-  padding: 15px 0 10px;
-}
-
-header.site .name {
-  margin-right: auto;
-  font-size: 1.44em;
-  font-weight: 600;
-  line-height: 1;
-  text-decoration: none;
-}
-
-header.site .name:hover {
-  color: var(--fg);
 }
 
 /* --- Headings ------------------------------------------------------------- */
@@ -280,11 +258,7 @@ li {
 
 @media (max-width: 30rem) {
   .page {
-    padding: 0 16px 4rem;
-  }
-
-  header.site {
-    padding-top: 20px;
+    padding: 2rem 16px 4rem;
   }
 }
 
@@ -542,8 +516,6 @@ input.margin-toggle:checked + .marginnote {
     margin-top: 30px;
     padding: 0;
     list-style: none;
-    /* Chrome 140+: lets :target-current mark the section in view. */
-    scroll-target-group: auto;
   }
 
   .toc li {
@@ -559,8 +531,9 @@ input.margin-toggle:checked + .marginnote {
       opacity 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
 
+  /* .current marks the section being read (static/js/toc.js). */
   .toc a:hover,
-  .toc a:target-current {
+  .toc a.current {
     opacity: 1;
     color: var(--fg);
   }
@@ -607,10 +580,10 @@ input.margin-toggle:checked + .marginnote {
 
 
 /* ==========================================================================
-   Page-specific bits: home, archive.
+   Page-specific bits: home, writings, back link.
    ========================================================================== */
 
-/* --- Spinning shapes on the home page (static/js/shapes.js) --------------- */
+/* --- Spinning shapes, home and contact (static/js/shapes.js) -------------- */
 
 /* ASCII art, wider than the text column and centered on the page. The script
    fills in as many characters as fit the box. Hidden without JavaScript. */
@@ -635,27 +608,14 @@ pre.shapes {
   }
 }
 
-/* --- Section headings and link lists (home, archive) ---------------------- */
+/* --- Section headings and link lists (writings, 404) ---------------------- */
 
 h2.section {
   margin: 1.5em 0 0.7em;
   font-size: 1.2em;
 }
 
-/* "Writing" + RSS button on one line. */
-.section-head {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 1.5em 0 0.7em;
-}
-
-.section-head h2.section {
-  margin: 0;
-}
-
-ul.links,
-.intro ul {
+ul.links {
   padding-left: 1em;
 }
 
@@ -667,48 +627,22 @@ ul.links .date {
   margin-left: 0.4em;
 }
 
-/* "See archive": no bullet or underline, text in line with the titles. */
-ul.links li.more {
-  list-style: none;
+/* --- Home: contact and writings, side by side ----------------------------- */
+
+.home-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em 1.5em;
 }
 
-ul.links li.more a {
+/* --- "← Back to …", one level up, at the end of most pages ---------------- */
+
+p.back {
+  margin: 3em 0 0;
+}
+
+p.back a {
   text-decoration: none;
-}
-
-/* --- RSS button ----------------------------------------------------------- */
-
-a.rss {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3em;
-  padding: 0.2em 0.5em 0.1em;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--muted);
-  font-size: 0.65em;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  line-height: 1.4;
-  text-decoration: none;
-}
-
-a.rss:hover {
-  border-color: var(--fg);
-  color: var(--fg);
-}
-
-a.rss svg {
-  width: 0.9em;
-  height: 0.9em;
-  margin-top: -0.1em;
-  fill: currentColor;
-  stroke: currentColor;
-  stroke-width: 1.8;
-}
-
-a.rss path {
-  fill: none;
 }
 
 

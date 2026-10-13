@@ -1,7 +1,8 @@
 # obk.dev
 
-Personal site. Static; the only JavaScript is the home page animation. One
-Go program turns Markdown into HTML: `content/` + `templates/` + `static/` -> `public/`.
+Personal site. Static, with a little JavaScript: the shapes animation and
+the contents highlight. One Go program turns Markdown into HTML:
+`content/` + `templates/` + `static/` -> `public/`.
 
     go run .                  # build into public/
     go run . -serve :8000     # build, then serve on http://localhost:8000
@@ -14,23 +15,27 @@ Deploys on push: `.build.yml` (builds.sr.ht) runs `go run .` and uploads
 ## Layout
 
     main.go      the generator: Markdown, sidenotes, contents, feed, 404
-    content/     about.md, posts/*.md
+    content/     about.md, contact.md, posts/*.md
     templates/   base.html wraps every page; one template per page type
-    static/      copied as-is: css/site.css, js/shapes.js, fonts/, images/, public.asc (pgp key)
+    static/      copied as-is: css/site.css, js/ (shapes, toc), fonts/, images/,
+                 public.asc (pgp key), _redirects (old /archive/ -> /writings/)
 
 | url                          | source                                | template       |
 |------------------------------|---------------------------------------|----------------|
-| `/`                          | `about.md` + latest `posts/*.md`      | `index.html`   |
+| `/`                          | `about.md`                            | `index.html`   |
 | `/posts/<slug>/`             | `posts/<slug>.md`                     | `post.html`    |
-| `/archive/`                  | all `posts/*.md`, grouped by year     | `archive.html` |
+| `/writings/`                 | all `posts/*.md`, grouped by year     | `writings.html`|
 | `/feed.xml`                  | all `posts/*.md`, full text (RSS 2.0) | (in `main.go`) |
 | `/about/`                    | `about.md`                            | `page.html`    |
+| `/contact/`                  | `contact.md`                          | `page.html`    |
 | `/404.html`                  | (none)                                | `404.html`     |
 
-No nav: the header is just the site name. Home opens with spinning ASCII
-shapes (`static/js/shapes.js`), then the about text, then the
-latest posts under "Writing" with an RSS button: up to 5 posts, or 4 plus a
-"See archive" link once there are more.
+No header or nav; about and contact have no title either. Home is spinning
+ASCII shapes (`static/js/shapes.js`), the about text, and two links side by
+side: Contact (scm, email, pgp, with the shapes on top too) and Writings (all
+posts by year). Pages end with a back link one level up
+(`Up` in `main.go`): a post goes to writings; writings, about and contact go
+home. Home and 404 have none.
 
 Cloudflare Pages serves `404.html` for any missing path; `-serve` does the
 same locally.
@@ -70,8 +75,9 @@ darioamodei.com.
   morph blends two fields, so shapes melt into each other. Pauses off screen,
   static under reduced motion, hidden without JavaScript.
 - Code: 0.84em, no ligatures, tab = 4, no syntax highlighting.
-- The contents ×/☰ button is a checkbox + label. Current-section highlight
-  uses `:target-current` (Chrome 140+ only).
+- The contents ×/☰ button is a checkbox + label. The section being read is
+  highlighted by `static/js/toc.js` (sidebar only; without JavaScript,
+  nothing is highlighted).
 
 ## Gotchas
 

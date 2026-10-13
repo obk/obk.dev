@@ -48,12 +48,21 @@ type Year struct {
 	Posts []Post
 }
 
+// Link is a link to another page of the site.
+type Link struct{ URL, Name string }
+
+// Where each page's back link goes: one level up.
+var (
+	upHome     = &Link{"/", "home page"}
+	upWritings = &Link{"/writings/", "writings"}
+)
+
 type Page struct {
 	Title, Description string
 	Intro              template.HTML
-	Posts              []Post
 	Years              []Year
-	More               bool // home page: more posts than shown, link the archive
+	Shapes             bool  // show the spinning shapes on top (page.html)
+	Up                 *Link // the "← Back to" link at the bottom; nil for none
 	Post
 }
 
@@ -138,7 +147,8 @@ func parse(path string) Post {
 		}
 	}
 	assert(p.Title != "", "%s: missing title", path)
-	if p.Time.IsZero() && !strings.HasSuffix(path, "about.md") {
+	// Only posts carry a date; pages (about, contact) don't.
+	if p.Time.IsZero() && filepath.Base(filepath.Dir(path)) == "posts" {
 		p.Time = fileDate(path)
 	}
 	var buf bytes.Buffer
@@ -294,34 +304,31 @@ func main() {
 	must(os.RemoveAll("public"))
 	copyDir("static", "public")
 
-	// The home page is the blog: content/posts/*.md, newest first.
+	// Posts: content/posts/*.md, newest first.
 	posts := loadPosts("content/posts")
 	for _, p := range posts {
 		render("post.html", "public/posts/"+p.Slug+"/index.html",
-			Page{Title: p.Title, Description: p.Description, Post: p})
+			Page{Title: p.Title, Description: p.Description, Post: p, Up: upWritings})
 	}
-	// Home opens with the about text, then the latest posts; the archive lists
-	// all of them by year.
+	// Home is the shapes and the about text, with links to contact and
+	// writings; writings lists all posts by year.
 	about := parse("content/about.md")
-	// Up to five posts fit; past that, show four and make the fifth row a link
-	// to the archive.
-	recent, more := posts, len(posts) > 5
-	if more {
-		recent = posts[:4]
-	}
 	render("index.html", "public/index.html",
-		Page{Title: "obk", Description: "Notes on systems, tooling, building, learning, and navigating in life.", Intro: about.Body, Posts: recent, More: more})
-	render("archive.html", "public/archive/index.html",
-		Page{Title: "Archive", Years: groupByYear(posts)})
+		Page{Title: "obk", Description: "Notes on systems, tooling, building, learning, and navigating in life.", Intro: about.Body})
+	render("writings.html", "public/writings/index.html",
+		Page{Title: "Writings", Years: groupByYear(posts), Up: upHome})
 
 	writeFeed("public/feed.xml", posts)
 
 	render("page.html", "public/about/index.html",
-		Page{Title: about.Title, Description: about.Description, Post: about})
+		Page{Title: about.Title, Description: about.Description, Post: about, Up: upHome})
+	contact := parse("content/contact.md")
+	render("page.html", "public/contact/index.html",
+		Page{Title: contact.Title, Description: contact.Description, Post: contact, Shapes: true, Up: upHome})
 
 	// Cloudflare Pages serves public/404.html for any path that doesn't exist.
 	render("404.html", "public/404.html", Page{Title: "Page not found"})
-	log.Printf("built %d posts, about, 404 -> public/", len(posts))
+	log.Printf("built %d posts, writings, about, contact, 404 -> public/", len(posts))
 
 	if *serve != "" {
 		log.Printf("serving public/ on http://localhost%s", *serve)

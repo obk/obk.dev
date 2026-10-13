@@ -1,5 +1,4 @@
-{{define "main"}}<h1 class="title">{{.Title}}</h1>
-{{if not .Time.IsZero}}<p class="date">Updated {{.LongDate}}</p>
+{{define "main"}}{{if .Shapes}}{{template "shapes"}}{{end}}{{if not .Time.IsZero}}<p class="date">Updated {{.LongDate}}</p>
 {{end}}<div class="body">
 {{.Body}}
 </div>{{end}}
