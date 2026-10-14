@@ -569,14 +569,16 @@ svg.curve circle {
 }
 
 /* Cycloid on a line and the medley: wide, not square. */
-svg#cycloid-horizontal {
+svg#cycloid-horizontal,
+svg#sine {
   width: min(100%, 34rem);
 }
 
 svg#medley,
 svg#ford,
 svg#golden,
-svg#nautilus {
+svg#nautilus,
+svg#newton {
   width: min(100%, 30rem);
 }
 
@@ -649,6 +651,14 @@ ul.links .date {
 
 .page.centered:has(#nautilus:not([hidden])) {
   --art: calc(min(100vw - 32px, 30rem) * 1.64 / 2.16);
+}
+
+.page.centered:has(#sine:not([hidden])) {
+  --art: calc(min(100vw - 32px, 34rem) * 1.36 / 4.16);
+}
+
+.page.centered:has(#newton:not([hidden])) {
+  --art: calc(min(100vw - 32px, 30rem) * 1.5 / 3.2);
 }
 
 @media (max-width: 30rem) {

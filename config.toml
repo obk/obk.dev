@@ -25,12 +25,18 @@ description = "notes on systems, tooling, building, learning, and navigating in 
 #                         spiral and back
 #   "nautilus"            a nautilus in section: a line curls into its
 #                         spiral, then the walls between its chambers grow
+#   "sine"                a dot, then a line that a sine wave runs out
+#                         along
+#   "penrose"             the impossible triangle, turning slowly for ever
+#   "chords"              chords round a circle drawing a cardioid, a
+#                         nephroid and on
+#   "newton"              Newton's cradle
 #   "random"              one of these, picked once per visit
 #   "custom"              one of those listed in custom below, picked once
 #                         per visit
 #   ""                    nothing; home and contact's text sits a third of
 #                         the way down
-animation = "custom"
+animation = "penrose"
 
 # The animations "custom" picks from, e.g. ["curve", "cycloid", "ford"].
 # Ignored unless animation is "custom".

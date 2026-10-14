@@ -35,7 +35,7 @@
 {{end}}{{range .}}{{template "art" .}}{{end}}{{end}}{{end}}
 
 {{/* One animation, by name. */}}
-{{define "art"}}{{if eq . "shapes"}}{{template "shapes"}}{{else if eq . "curve"}}{{template "curve"}}{{else if eq . "cycloid"}}{{template "cycloid"}}{{else if eq . "mandelbrot"}}{{template "mandelbrot"}}{{else if eq . "cycloid-horizontal"}}{{template "cycloid-horizontal"}}{{else if eq . "medley"}}{{template "medley"}}{{else if eq . "ford"}}{{template "ford"}}{{else if eq . "golden"}}{{template "golden"}}{{else if eq . "nautilus"}}{{template "nautilus"}}{{end}}{{end}}
+{{define "art"}}{{if eq . "shapes"}}{{template "shapes"}}{{else if eq . "curve"}}{{template "curve"}}{{else if eq . "cycloid"}}{{template "cycloid"}}{{else if eq . "mandelbrot"}}{{template "mandelbrot"}}{{else if eq . "cycloid-horizontal"}}{{template "cycloid-horizontal"}}{{else if eq . "medley"}}{{template "medley"}}{{else if eq . "ford"}}{{template "ford"}}{{else if eq . "golden"}}{{template "golden"}}{{else if eq . "nautilus"}}{{template "nautilus"}}{{else if eq . "sine"}}{{template "sine"}}{{else if eq . "penrose"}}{{template "penrose"}}{{else if eq . "chords"}}{{template "chords"}}{{else if eq . "newton"}}{{template "newton"}}{{end}}{{end}}
 
 {{/* Spinning ASCII shapes (static/js/shapes.js). */}}
 {{define "shapes"}}<pre class="shapes" id="shapes" aria-hidden="true" hidden></pre>
@@ -95,4 +95,27 @@
    the walls between its chambers grow in (static/js/nautilus.js). */}}
 {{define "nautilus"}}<svg class="curve" id="nautilus" fill="none" viewBox="-1.08 -0.82 2.16 1.64" aria-hidden="true" hidden><path class="wall"/><path class="septa"/></svg>
 <script src="{{asset "/js/nautilus.js"}}"></script>
+{{end}}
+
+{{/* A pen bobbing up and down, its height carried off to the right as a
+   sine wave (static/js/sine.js). */}}
+{{define "sine"}}<svg class="curve" id="sine" fill="none" viewBox="-2.08 -0.68 4.16 1.36" aria-hidden="true" hidden><path class="ground faint"/><path class="line"/><circle class="pen" r="0.03"/></svg>
+<script src="{{asset "/js/sine.js"}}"></script>
+{{end}}
+
+{{/* The impossible triangle, turning slowly for ever
+   (static/js/penrose.js). */}}
+{{define "penrose"}}<svg class="curve" id="penrose" fill="none" viewBox="-1 -1 2 2" aria-hidden="true" hidden><path class="outline"/></svg>
+<script src="{{asset "/js/penrose.js"}}"></script>
+{{end}}
+
+{{/* Chords round a circle, their envelope a cardioid, a nephroid and on
+   (static/js/chords.js). */}}
+{{define "chords"}}<svg class="curve" id="chords" fill="none" viewBox="-1 -1 2 2" aria-hidden="true" hidden><path class="ring faint"/><path class="chords"/></svg>
+<script src="{{asset "/js/chords.js"}}"></script>
+{{end}}
+
+{{/* Newton's cradle, the end balls swinging in turn (static/js/newton.js). */}}
+{{define "newton"}}<svg class="curve" id="newton" fill="none" viewBox="-1.6 -0.86 3.2 1.5" aria-hidden="true" hidden><path class="bar"/><path class="strings faint"/><circle class="ball" r="0"/><circle class="ball" r="0"/><circle class="ball" r="0"/><circle class="ball" r="0"/><circle class="ball" r="0"/></svg>
+<script src="{{asset "/js/newton.js"}}"></script>
 {{end}}

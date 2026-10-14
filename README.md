@@ -102,12 +102,17 @@ to contact and writings; every other page ends with a link one level up
 <tr>
 <td align="center"><img src="docs/animations/mandelbrot.gif" width="250" alt="mandelbrot"><br><code>mandelbrot</code></td>
 <td align="center"><img src="docs/animations/cycloid-horizontal.gif" width="250" alt="cycloid-horizontal"><br><code>cycloid-horizontal</code></td>
-<td align="center"><img src="docs/animations/medley.gif" width="250" alt="medley"><br><code>medley</code></td>
+<td align="center"><img src="docs/animations/ford.gif" width="250" alt="ford"><br><code>ford</code></td>
 </tr>
 <tr>
-<td align="center"><img src="docs/animations/ford.gif" width="250" alt="ford"><br><code>ford</code></td>
 <td align="center"><img src="docs/animations/golden.gif" width="250" alt="golden"><br><code>golden</code></td>
 <td align="center"><img src="docs/animations/nautilus.gif" width="250" alt="nautilus"><br><code>nautilus</code></td>
+<td align="center"><img src="docs/animations/sine.gif" width="250" alt="sine"><br><code>sine</code></td>
+</tr>
+<tr>
+<td align="center"><img src="docs/animations/penrose.gif" width="250" alt="penrose"><br><code>penrose</code></td>
+<td align="center"><img src="docs/animations/chords.gif" width="250" alt="chords"><br><code>chords</code></td>
+<td align="center"><img src="docs/animations/newton.gif" width="250" alt="newton"><br><code>newton</code></td>
 </tr>
 </table>
 
@@ -156,6 +161,20 @@ the site works without it.
   then the mouth closes it and the septa, the curved walls between its
   chambers, grow in from the innermost out, leaving the last third of a
   turn open as the body chamber.
+- `sine`: a dot stretches into a line; then a pen at its left end bobs up
+  and down, speeding up from rest, and its height, carried off to the right
+  at a steady speed, draws a sine wave that runs out along the flat line
+  until it fills it.
+- `penrose`: the Penrose triangle, the impossible one: three square beams at
+  right angles in a loop. It starts to turn, slowly, and turns for ever;
+  every third of a turn it looks as it began. It's three faces of real
+  beams seen isometrically, each a third of a turn from the next.
+- `chords`: N points round a circle, each joined to the point k times as far
+  round. The chords' envelope is a cardioid for k = 2, a nephroid for 3,
+  then epicycloids; the chords are drawn in one by one, then k counts up to
+  6, the chords sliding from curve to curve, and back.
+- `newton`: Newton's cradle. The first ball is lifted and let go; it stops
+  dead as it hits the row and the last one swings out and back, for ever.
 - `random`: one of these, picked once per visit and kept from page to page;
   a return visit gets a different one.
 - `custom`: like `random`, but only from the ones listed in `custom`, e.g.

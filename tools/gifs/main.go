@@ -57,6 +57,10 @@ var clips = []struct {
 	{"ford", 15.4},
 	{"golden", 12.6},
 	{"nautilus", 16.7},
+	{"sine", 14},
+	{"penrose", 12},
+	{"chords", 15}, // to 4: a whole loop is 31 s, and the chords make it big
+	{"newton", 9},
 }
 
 const (

@@ -40,6 +40,9 @@ class El {
     }
     return null;
   }
+  querySelectorAll(sel) {
+    return this.children.flatMap((c) => [...(c.matches(sel) ? [c] : []), ...c.querySelectorAll(sel)]);
+  }
   append(...cs) {
     for (const c of cs) {
       c.parent = this;
