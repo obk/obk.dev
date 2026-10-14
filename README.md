@@ -134,7 +134,7 @@ the site works without it.
   following z_n(c) = 2·e^(i·2^(n-1)·θ) round in small steps; θ is the same
   "external angle" on every curve, so a morph moves each point a short way.
 - `cycloid-horizontal`: a circle rolls along a line, end to end and back,
-  never stopping; around each turn its pen slides along the spoke, drawing
+  never stopping; from edge to edge its pen slides along the spoke, drawing
   normal, curtate and prolate (looped) cycloids.
 - `medley`: `curve`, `cycloid` and `cycloid-horizontal` as one, with one
   line throughout. The last rose becomes a cardioid as the circles fade in;
