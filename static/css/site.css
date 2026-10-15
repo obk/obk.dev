@@ -547,6 +547,18 @@ pre.shapes {
   }
 }
 
+/* 404: the code, small, over the heading. */
+p.code {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.25em;
+  font-variant-numeric: tabular-nums;
+}
+
+p.code + h1.title {
+  margin-top: 0.1em;
+}
+
 /* --- Line animations: curve, cycloid, mandelbrot (static/js/) ------------- */
 
 svg.curve {

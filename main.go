@@ -126,7 +126,7 @@ type Page struct {
 	Intro              template.HTML
 	Years              []Year
 	Animation          string   // on top of home and contact (config.toml); "" for none
-	Centered           bool     // home and contact: text centered, the same height on both
+	Centered           bool     // home, contact and 404: text centered
 	Up                 *Link    // the "← back to" link at the bottom; nil for none
 	Site               *Config  // set by render: config.toml
 	FontPreload        string   // set by render: the font file every page needs first
@@ -427,7 +427,7 @@ func main() {
 		Page{Title: contact.Title, Description: contact.Description, Post: contact, Animation: site.Animation, Centered: true, Up: upHome})
 
 	// Cloudflare Pages serves public/404.html for any path that doesn't exist.
-	render("404.html", "public/404.html", Page{Title: "page not found"})
+	render("404.html", "public/404.html", Page{Title: "page not found", Centered: true})
 	log.Printf("built %d posts, writings, about, contact, 404 -> public/", len(posts))
 
 	if *serve != "" {
