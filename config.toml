@@ -36,7 +36,7 @@ description = "notes on systems, tooling, building, learning, and navigating in 
 #                         per visit
 #   ""                    nothing; home and contact's text sits a third of
 #                         the way down
-animation = "shapes"
+animation = "chords"
 
 # The animations "custom" picks from, e.g. ["curve", "cycloid", "ford"].
 # Ignored unless animation is "custom".
