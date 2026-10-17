@@ -60,6 +60,7 @@ type Config struct {
 	Animation   string   `toml:"animation"`
 	Custom      []string `toml:"custom"`
 	GoatCounter string   `toml:"goatcounter"`
+	Theme       string   `toml:"theme"`
 	Fonts       struct {
 		Text string `toml:"text"`
 		Mono string `toml:"mono"`
@@ -72,6 +73,9 @@ type Config struct {
 
 // The animations config.toml can name, besides "random", "custom" and "".
 var animations = []string{"shapes", "curve", "cycloid", "mandelbrot", "cycloid-horizontal", "medley", "ford", "golden", "nautilus", "sine", "penrose", "chords", "newton"}
+
+// The color themes config.toml can name; static/css/site.css has each.
+var themes = []string{"paper", "catppuccin", "gruvbox", "solarized", "nord", "rose-pine", "tokyo-night", "everforest", "dracula"}
 
 // artPool lists the animations a page with this animation setting carries:
 // none, one, or with "random" and "custom" several to pick from.
@@ -108,6 +112,10 @@ func loadConfig(path string) *Config {
 		assert(slices.Contains(animations, a), "%s: custom has %q, want one of %q", path, a, animations)
 		assert(!slices.Contains(c.Custom[:i], a), "%s: custom has %q twice", path, a)
 	}
+	if c.Theme == "" {
+		c.Theme = "paper"
+	}
+	assert(slices.Contains(themes, c.Theme), "%s: theme is %q, want one of %q", path, c.Theme, themes)
 	assert(c.Fonts.Text != "" && c.Fonts.Mono != "", "%s: [fonts] text and mono are required", path)
 	return &c
 }

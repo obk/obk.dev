@@ -5,7 +5,17 @@
 
 
 /* ==========================================================================
-   Colors. Warm paper and ink, after darioamodei.com.
+   Colors, picked by theme in config.toml (data-theme on <html>). Each theme
+   has a light and a dark side, from its own palette:
+     paper        warm paper and ink, after darioamodei.com
+     catppuccin   Latte / Mocha
+     gruvbox      light / dark, medium contrast
+     solarized    light / dark
+     nord         Snow Storm / Polar Night
+     rose-pine    Dawn / main
+     tokyo-night  Day / Night
+     everforest   light / dark, medium contrast
+     dracula      Alucard / Dracula
    Dark mode follows the OS; there is no toggle.
    ========================================================================== */
 
@@ -16,7 +26,88 @@
   --border: #d1cfc5; /* rules, quote bar */
   --tint: #00000014; /* code and note-marker backgrounds */
   --tint-hover: #00000026;
+  --accent: var(--fg); /* links and the animation */
   color-scheme: light;
+}
+
+:root[data-theme="catppuccin"] {
+  --bg: #eff1f5; /* base */
+  --fg: #4c4f69; /* text */
+  --muted: #6c6f85; /* subtext0 */
+  --border: #bcc0cc; /* surface1 */
+  --tint: #dce0e8; /* crust */
+  --tint-hover: #ccd0da; /* surface0 */
+  --accent: #8839ef; /* mauve */
+}
+
+:root[data-theme="gruvbox"] {
+  --bg: #fbf1c7; /* bg0 */
+  --fg: #3c3836; /* fg1 */
+  --muted: #7c6f64; /* fg4 */
+  --border: #d5c4a1; /* bg2 */
+  --tint: #ebdbb2; /* bg1 */
+  --tint-hover: #d5c4a1; /* bg2 */
+  --accent: #af3a03; /* orange */
+}
+
+:root[data-theme="solarized"] {
+  --bg: #fdf6e3; /* base3 */
+  --fg: #657b83; /* base00 */
+  --muted: #93a1a1; /* base1 */
+  --border: #93a1a1; /* base1 */
+  --tint: #eee8d5; /* base2 */
+  --tint-hover: #93a1a14d;
+  --accent: #268bd2; /* blue */
+}
+
+:root[data-theme="nord"] {
+  --bg: #eceff4; /* nord6 */
+  --fg: #2e3440; /* nord0 */
+  --muted: #4c566a; /* nord3 */
+  --border: #d8dee9; /* nord4 */
+  --tint: #e5e9f0; /* nord5 */
+  --tint-hover: #d8dee9; /* nord4 */
+  --accent: #5e81ac; /* nord10 */
+}
+
+:root[data-theme="rose-pine"] {
+  --bg: #faf4ed; /* base */
+  --fg: #575279; /* text */
+  --muted: #797593; /* subtle */
+  --border: #dfdad9; /* highlight med */
+  --tint: #f2e9e1; /* overlay */
+  --tint-hover: #dfdad9; /* highlight med */
+  --accent: #907aa9; /* iris */
+}
+
+:root[data-theme="tokyo-night"] {
+  --bg: #e1e2e7; /* bg */
+  --fg: #3760bf; /* fg */
+  --muted: #6172b0; /* fg_dark */
+  --border: #a8aecb; /* fg_gutter */
+  --tint: #d0d5e3; /* bg_dark */
+  --tint-hover: #c4c8da; /* bg_highlight */
+  --accent: #9854f1; /* magenta */
+}
+
+:root[data-theme="everforest"] {
+  --bg: #fdf6e3; /* bg0 */
+  --fg: #5c6a72; /* fg */
+  --muted: #829181; /* grey2 */
+  --border: #e0dcc7; /* bg4 */
+  --tint: #f4f0d9; /* bg1 */
+  --tint-hover: #e6e2cc; /* bg3 */
+  --accent: #8da101; /* green */
+}
+
+:root[data-theme="dracula"] {
+  --bg: #fffbeb; /* background */
+  --fg: #1f1f1f; /* foreground */
+  --muted: #635d97; /* comment */
+  --border: #cfcfde; /* selection */
+  --tint: #cfcfde80;
+  --tint-hover: #cfcfde; /* selection */
+  --accent: #644ac9; /* purple */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,6 +119,86 @@
     --tint: #ffffff1a;
     --tint-hover: #ffffff2e;
     color-scheme: dark;
+  }
+
+  :root[data-theme="catppuccin"] {
+    --bg: #1e1e2e; /* base */
+    --fg: #cdd6f4; /* text */
+    --muted: #a6adc8; /* subtext0 */
+    --border: #45475a; /* surface1 */
+    --tint: #313244; /* surface0 */
+    --tint-hover: #45475a; /* surface1 */
+    --accent: #cba6f7; /* mauve */
+  }
+
+  :root[data-theme="gruvbox"] {
+    --bg: #282828; /* bg0 */
+    --fg: #ebdbb2; /* fg1 */
+    --muted: #a89984; /* fg4 */
+    --border: #504945; /* bg2 */
+    --tint: #3c3836; /* bg1 */
+    --tint-hover: #504945; /* bg2 */
+    --accent: #fe8019; /* orange */
+  }
+
+  :root[data-theme="solarized"] {
+    --bg: #002b36; /* base03 */
+    --fg: #839496; /* base0 */
+    --muted: #586e75; /* base01 */
+    --border: #586e75; /* base01 */
+    --tint: #073642; /* base02 */
+    --tint-hover: #586e754d;
+    --accent: #268bd2; /* blue */
+  }
+
+  :root[data-theme="nord"] {
+    --bg: #2e3440; /* nord0 */
+    --fg: #eceff4; /* nord6 */
+    --muted: #d8dee9; /* nord4 */
+    --border: #4c566a; /* nord3 */
+    --tint: #3b4252; /* nord1 */
+    --tint-hover: #434c5e; /* nord2 */
+    --accent: #88c0d0; /* nord8 */
+  }
+
+  :root[data-theme="rose-pine"] {
+    --bg: #191724; /* base */
+    --fg: #e0def4; /* text */
+    --muted: #908caa; /* subtle */
+    --border: #403d52; /* highlight med */
+    --tint: #26233a; /* overlay */
+    --tint-hover: #403d52; /* highlight med */
+    --accent: #c4a7e7; /* iris */
+  }
+
+  :root[data-theme="tokyo-night"] {
+    --bg: #1a1b26; /* bg */
+    --fg: #c0caf5; /* fg */
+    --muted: #737aa2; /* dark5 */
+    --border: #3b4261; /* fg_gutter */
+    --tint: #292e42; /* bg_highlight */
+    --tint-hover: #3b4261; /* fg_gutter */
+    --accent: #7aa2f7; /* blue */
+  }
+
+  :root[data-theme="everforest"] {
+    --bg: #2d353b; /* bg0 */
+    --fg: #d3c6aa; /* fg */
+    --muted: #9da9a0; /* grey2 */
+    --border: #475258; /* bg3 */
+    --tint: #343f44; /* bg1 */
+    --tint-hover: #3d484d; /* bg2 */
+    --accent: #a7c080; /* green */
+  }
+
+  :root[data-theme="dracula"] {
+    --bg: #282a36; /* background */
+    --fg: #f8f8f2; /* foreground */
+    --muted: #6272a4; /* comment */
+    --border: #44475a; /* current line */
+    --tint: #44475a; /* current line */
+    --tint-hover: #6272a4; /* comment */
+    --accent: #bd93f9; /* purple */
   }
 
   /* Light text on dark reads heavier; thin the variable weight to match. */
@@ -163,7 +334,7 @@ p {
 }
 
 a {
-  color: var(--fg);
+  color: var(--accent);
   text-decoration: underline;
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.1em;
@@ -560,6 +731,11 @@ p.code + h1.title {
 }
 
 /* --- Line animations: curve, cycloid, mandelbrot (static/js/) ------------- */
+
+svg.curve,
+pre.shapes {
+  color: var(--accent);
+}
 
 svg.curve {
   width: min(100%, 20rem);

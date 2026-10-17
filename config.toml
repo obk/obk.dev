@@ -42,6 +42,18 @@ animation = "chords"
 # Ignored unless animation is "custom".
 custom = ["nautilus", "curve", "shapes"]
 
+# Colors; both follow the OS's light or dark setting:
+#   "paper"        ivory paper and slate ink
+#   "catppuccin"   Catppuccin: Latte when light, Mocha when dark
+#   "gruvbox"      Gruvbox light and dark
+#   "solarized"    Solarized light and dark
+#   "nord"         Nord: Snow Storm when light, Polar Night when dark
+#   "rose-pine"    Rosé Pine: Dawn when light, the main one when dark
+#   "tokyo-night"  Tokyo Night: Day when light, Night when dark
+#   "everforest"   Everforest light and dark
+#   "dracula"      Dracula: Alucard when light, Dracula when dark
+theme = ""
+
 # Page views by goatcounter.com: your site's count URL, or "" for none.
 goatcounter = ""
 

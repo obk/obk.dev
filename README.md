@@ -182,8 +182,11 @@ the site works without it.
 
 ### Style
 
-All in `static/css/site.css`: ivory paper and slate ink, after
-darioamodei.com. Dark mode follows the system (no toggle). Fonts are
+All in `static/css/site.css`. The colors are picked by `theme` in
+`config.toml`: `paper`, ivory paper and slate ink after darioamodei.com,
+or one of `catppuccin`, `gruvbox`, `solarized`, `nord`, `rose-pine`,
+`tokyo-night`, `everforest` and `dracula`, each with its light and dark
+side. Dark mode follows the system (no toggle). Fonts are
 Newsreader for text and IBM Plex Mono for code, set in `config.toml`; the
 build downloads them from Google Fonts with only the Latin character sets,
 so pages load them from the site itself. Hard-refresh (Ctrl+Shift+R) after
