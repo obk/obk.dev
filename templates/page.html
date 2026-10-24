@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Title}}</title>
+{{with .Description}}<meta name="description" content="{{.}}">
+<meta property="og:description" content="{{.}}">
+{{end}}{{with .URL}}<link rel="canonical" href="{{.}}">
+<meta property="og:url" content="{{.}}">
+{{end}}<meta property="og:title" content="{{.Title}}">
+<meta property="og:type" content="website">
+<link rel="preload" href="/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="/favicon.ico">
+<style>
+{{.Style}}</style>
+</head>
+<body>
+<main>
+<h1>
+<span class="visually-hidden">{{.Title}}</span>
+<svg viewBox="0 0 452 200" aria-hidden="true">
+<circle class="circle" cx="60" cy="140" r="60"/>
+<rect class="stem" x="144" y="0" width="30" height="200"/>
+<rect class="square" x="174" y="80" width="120" height="120"/>
+<rect class="stem" x="318" y="0" width="30" height="200"/>
+<polygon class="triangle" points="348,140 452,80 452,200"/>
+</svg>
+</h1>
+{{.Body}}</main>
+</body>
+</html>

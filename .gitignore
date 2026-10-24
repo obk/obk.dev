@@ -1,0 +1,7 @@
+public/
+.wrangler/
+.DS_Store
+*.swp
+CLAUDE.md
+.env
+test-*

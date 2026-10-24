@@ -1,0 +1,162 @@
+/* Inlined into index.html by main.go. Bauhaus: Kandinsky's three shapes in
+   his colours (yellow triangle, red square, blue circle) spell the name in
+   page.html, standing on a black base; everything else is type, on one
+   centred axis. Colours from hueatlas.com's Bauhaus palette. */
+
+@font-face {
+  font-family: "Jost";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(/fonts/jost.woff2) format("woff2");
+}
+
+:root {
+  --bg: #f5f2e8; /* studio white */
+  --fg: #1a1a18; /* bauhaus black: text, stems, the base */
+  --red: #c8302a;
+  --yellow: #e8c018;
+  --blue: #1e3878;
+  --hover: var(--red); /* links pointed at */
+  --focus: var(--blue); /* the keyboard's focus ring */
+  --mark: clamp(6.5rem, 30vw, 12.5rem); /* the name's height */
+  --line: calc(var(--mark) * 0.15); /* the base, as heavy as a stem */
+  color-scheme: light;
+}
+
+/* Dark mode follows the OS: black and white swap. Red on black reads as a
+   shape but not as text (3.2:1), so links turn yellow instead. Blue keeps
+   its hue and chroma but lifts from OKLCH lightness 0.36 to 0.58; as it is,
+   the circle would all but vanish (1.6:1). */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1a18;
+    --fg: #f5f2e8;
+    --blue: #5878be;
+    --hover: var(--yellow);
+    --focus: var(--yellow);
+    color-scheme: dark;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 1.125rem/1.5 "Jost", "Futura", "Century Gothic", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* One column in the middle of the window, nudged up to its optical centre.
+   Lowercase throughout, after Bayer's kleinschreibung. */
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 3rem 16px 5rem;
+  text-align: center;
+  text-transform: lowercase;
+}
+
+/* --- The name ------------------------------------------------------------- */
+
+/* The h1 shrinks to the drawing, so the base is exactly as wide as the name. */
+h1 {
+  margin: 0 0 2.5rem;
+  border-bottom: var(--line) solid var(--fg);
+}
+
+h1 svg {
+  display: block;
+  width: auto;
+  height: var(--mark);
+}
+
+.stem {
+  fill: var(--fg);
+}
+
+.circle {
+  fill: var(--blue);
+}
+
+.square {
+  fill: var(--red);
+}
+
+.triangle {
+  fill: var(--yellow);
+}
+
+/* --- Text ----------------------------------------------------------------- */
+
+/* At most 1.25rem, so on a wide screen the bio sets in two lines, broken
+   after "sight:". */
+main > p {
+  margin: 0 0 2.5rem;
+  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.25rem);
+  line-height: 1.4;
+  text-wrap: balance; /* centred lines of even length */
+}
+
+/* Contact: two columns, centred as one block; labels end where what they
+   name begins. */
+dl {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.2rem 1rem;
+  margin: 0;
+  font-size: 1rem;
+}
+
+dt {
+  grid-column: 1;
+  font-weight: 600;
+  text-align: right;
+}
+
+dd {
+  grid-column: 2;
+  margin: 0;
+  text-align: left;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 0.1em;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--hover);
+}
+
+a:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Black on yellow in both modes; white on yellow wouldn't read. */
+::selection {
+  background: var(--yellow);
+  color: #1a1a18;
+}
+
+/* Read by screen readers, not shown: the name as text. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
