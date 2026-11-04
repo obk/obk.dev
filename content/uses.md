@@ -320,21 +320,21 @@ automation
                    | flex mini 2.5g |
                    +----------------+
                             |
-    .  servers  . . . . . . | . . . . . . . . . . . . . . .
-    :       +------------+--+---------+------------+      :
-    :       |            |            |            |      :
-    :  +---------+  +---------+  +---------+  +---------+ :
-    :  |  unas 2 |  |  akagi  |  |  nagisa |  |  soryu  | :
-    :  +---------+  +---------+  +---------+  +---------+ :
-    :                proxmox      adguard      claude     :
-    :                + immich                  code        :
-    :                + radarr                             :
-    :                + sonarr                             :
-    :                + prowlarr                           :
-    :                + jellyfin                           :
-    :                + vaultwarden                        :
-    :                + transmission                       :
-    . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        .  servers  . . . . | . . . . . . . . . . . . . . .
+        :       +-----------+-----------+-----------+     :
+        :       |           |           |           |     :
+        :  +--------+  +--------+  +--------+  +--------+ :
+        :  | unas 2 |  | akagi  |  | nagisa |  | soryu  | :
+        :  +--------+  +--------+  +--------+  +--------+ :
+        :               proxmox     adguard     claude    :
+        :               + immich                code      :
+        :               + radarr                          :
+        :               + sonarr                          :
+        :               + prowlarr                        :
+        :               + jellyfin                        :
+        :               + vaultwarden                     :
+        :               + transmission                    :
+        . . . . . . . . . . . . . . . . . . . . . . . . . .
 ```
 
 </details>
