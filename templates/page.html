@@ -3,30 +3,44 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{.Title}}</title>
+<title>{{.Title}}{{if .Post}} · obk{{end}}</title>
 {{with .Description}}<meta name="description" content="{{.}}">
 <meta property="og:description" content="{{.}}">
 {{end}}{{with .URL}}<link rel="canonical" href="{{.}}">
 <meta property="og:url" content="{{.}}">
 {{end}}<meta property="og:title" content="{{.Title}}">
 <meta property="og:type" content="website">
-<link rel="preload" href="/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="icon" href="/favicon.ico">
+<meta name="color-scheme" content="light dark">
+<link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="obk" href="/feed.xml">
 <style>
 {{.Style}}</style>
 </head>
-<body>
-<main>
-<h1>
-<span class="visually-hidden">{{.Title}}</span>
-<svg viewBox="0 0 452 200" aria-hidden="true">
-<circle class="circle" cx="60" cy="140" r="60"/>
-<rect class="stem" x="144" y="0" width="30" height="200"/>
-<rect class="square" x="174" y="80" width="120" height="120"/>
-<rect class="stem" x="318" y="0" width="30" height="200"/>
-<polygon class="triangle" points="348,140 452,80 452,200"/>
-</svg>
-</h1>
-{{.Body}}</main>
+<body class="{{.Name}}">
+{{with .Menu}}<header>
+<nav aria-label="pages">
+<ul>
+{{range .}}<li><a href="{{.Href}}"{{if .Current}} aria-current="page"{{end}}>{{.Label}}</a></li>
+{{end}}</ul>
+</nav>
+</header>
+{{end}}<main>
+{{if .Post}}<article>
+<a class="back" href="/posts/">← posts</a>
+<h1>{{.Title}}</h1>
+{{with .Description}}<p class="subtitle">{{.}}</p>
+{{end}}{{with .Contents}}<aside class="toc"><nav aria-label="contents">
+<p>contents</p>
+<ol>
+{{range .}}<li><a href="#{{.ID}}">{{.Text}}</a></li>
+{{end}}</ol>
+</nav></aside>
+{{end}}{{.Body}}
+<p class="subtitle written">written on <time datetime="{{.DateTime}}">{{.Date}}</time>.</p>
+</article>
+{{else}}<h1 class="visually-hidden">{{.Title}}</h1>
+{{.Body}}{{end}}</main>
 </body>
 </html>

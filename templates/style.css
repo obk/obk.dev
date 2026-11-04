@@ -1,157 +1,479 @@
-/* Inlined into index.html by main.go. Bauhaus: Kandinsky's three shapes in
-   his colours (yellow triangle, red square, blue circle) spell the name in
-   page.html, standing on a black base; everything else is type, on one
-   centred axis. Colours from hueatlas.com's Bauhaus palette. */
+/* Inlined into every page by main.go. As little as reads well: Inter,
+   black on white, one narrow column, plain links. */
+
+/* Inter for text, IBM Plex Mono for code, both served by the site, the
+   Latin subset only. Inter is variable, so one file holds every weight. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(/fonts/inter.woff2) format("woff2");
+}
 
 @font-face {
-  font-family: "Jost";
-  font-style: normal;
-  font-weight: 400 700;
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 100 900;
   font-display: swap;
-  src: url(/fonts/jost.woff2) format("woff2");
+  src: url(/fonts/inter-italic.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/plex-mono.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/plex-mono-italic.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(/fonts/plex-mono-semibold.woff2) format("woff2");
 }
 
 :root {
-  --bg: #f5f2e8; /* studio white */
-  --fg: #1a1a18; /* bauhaus black: text, stems, the base */
-  --red: #c8302a;
-  --yellow: #e8c018;
-  --blue: #1e3878;
-  --hover: var(--red); /* links pointed at */
-  --focus: var(--blue); /* the keyboard's focus ring */
-  --mark: clamp(6.5rem, 30vw, 12.5rem); /* the name's height */
-  --line: calc(var(--mark) * 0.15); /* the base, as heavy as a stem */
-  color-scheme: light;
+  --bg: #fff;
+  --fg: #111;
+  --muted: #6b6b6b; /* 5.3:1 on white */
+  color-scheme: light dark;
 }
 
-/* Dark mode follows the OS: black and white swap. Red on black reads as a
-   shape but not as text (3.2:1), so links turn yellow instead. Blue keeps
-   its hue and chroma but lifts from OKLCH lightness 0.36 to 0.58; as it is,
-   the circle would all but vanish (1.6:1). */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1a1a18;
-    --fg: #f5f2e8;
-    --blue: #5878be;
-    --hover: var(--yellow);
-    --focus: var(--yellow);
-    color-scheme: dark;
+    --bg: #111;
+    --fg: #eee;
+    --muted: #999; /* 6.6:1 on #111 */
   }
 }
 
-* {
-  box-sizing: border-box;
-}
-
 body {
-  margin: 0;
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
   background: var(--bg);
   color: var(--fg);
-  font: 400 1.125rem/1.5 "Jost", "Futura", "Century Gothic", sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* One column in the middle of the window, nudged up to its optical centre.
-   Lowercase throughout, after Bayer's kleinschreibung. */
-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100svh;
-  max-width: 44rem;
-  margin: 0 auto;
-  padding: 3rem 16px 5rem;
-  text-align: center;
+  font: 1rem/1.6 "Inter", system-ui, sans-serif;
   text-transform: lowercase;
 }
 
-/* --- The name ------------------------------------------------------------- */
-
-/* The h1 shrinks to the drawing, so the base is exactly as wide as the name. */
-h1 {
-  margin: 0 0 2.5rem;
-  border-bottom: var(--line) solid var(--fg);
+/* Posts get a wider column, room for code and drawings. */
+body.post {
+  max-width: 40rem;
 }
 
-h1 svg {
-  display: block;
-  width: auto;
-  height: var(--mark);
+nav ul {
+  display: flex;
+  gap: 1rem;
+  margin: 0 0 3rem;
+  padding: 0;
+  list-style: none;
 }
 
-.stem {
-  fill: var(--fg);
-}
-
-.circle {
-  fill: var(--blue);
-}
-
-.square {
-  fill: var(--red);
-}
-
-.triangle {
-  fill: var(--yellow);
-}
-
-/* --- Text ----------------------------------------------------------------- */
-
-/* At most 1.25rem, so on a wide screen the bio sets in two lines, broken
-   after "sight:". */
-main > p {
-  margin: 0 0 2.5rem;
-  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.25rem);
-  line-height: 1.4;
-  text-wrap: balance; /* centred lines of even length */
-}
-
-/* Contact: two columns, centred as one block; labels end where what they
-   name begins. */
-dl {
-  display: grid;
-  grid-template-columns: auto auto;
-  gap: 0.2rem 1rem;
-  margin: 0;
-  font-size: 1rem;
-}
-
-dt {
-  grid-column: 1;
-  font-weight: 600;
-  text-align: right;
-}
-
-dd {
-  grid-column: 2;
-  margin: 0;
-  text-align: left;
+nav a[aria-current="page"] {
+  text-decoration: none;
 }
 
 a {
   color: inherit;
+  text-underline-offset: 0.2em;
+}
+
+em {
+  font-style: normal;
+  color: var(--muted);
+}
+
+h2 {
+  margin: 2.5rem 0 0.5rem;
+  font-size: 1rem;
+  font-weight: normal;
+  color: var(--muted);
+}
+
+dl {
+  margin: 1.5rem 0 0;
+}
+
+h2 + dl {
+  margin-top: 0;
+}
+
+dd {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+}
+
+/* Home, now and uses: the label beside its value. */
+.index dl,
+.now dl,
+.uses dl {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  row-gap: 0.25rem;
+}
+
+/* Uses: machines and apps, each split into sections folded away under
+   their headings until opened; the marker shows which way. */
+.uses h2 {
+  margin-top: 3rem;
+  color: var(--fg);
+}
+
+.uses details {
+  margin-top: 1rem;
+}
+
+.uses h2 + details {
+  margin-top: 0;
+}
+
+/* A part that folds as a whole, like topology, sits apart as machines
+   and apps do. */
+.uses details:has(> summary h2) {
+  margin-top: 3rem;
+}
+
+.uses summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.uses summary::-webkit-details-marker {
+  display: none;
+}
+
+.uses summary::before {
+  content: "▸ ";
+  color: var(--muted);
+}
+
+.uses details[open] > summary::before {
+  content: "▾ ";
+}
+
+.uses summary h2,
+.uses summary h3 {
+  display: inline;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: normal;
+  color: var(--fg);
+}
+
+.uses details[open] {
+  margin-bottom: 2rem;
+}
+
+.uses h4 {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 1rem;
+  font-weight: normal;
+  color: var(--muted);
+}
+
+.uses h4 + dl {
+  margin-top: 0;
+}
+
+.uses summary + dl {
+  margin-top: 1rem;
+}
+
+/* Wide enough for its longest labels, motherboard and microphone. */
+.uses dl {
+  grid-template-columns: 6.5rem 1fr;
+  column-gap: 1rem;
+}
+
+.index dt,
+.now dt,
+.uses dt {
+  color: var(--muted);
+}
+
+.index dd,
+.now dd,
+.uses dd {
+  margin: 0;
+  color: var(--fg);
+}
+
+/* --- Posts ---------------------------------------------------------------- */
+
+/* The list: by year, the date beside the title, the description under it. */
+.posts dl {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  row-gap: 0.75rem;
+}
+
+.posts dt {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.posts dd {
+  margin: 0;
+  color: var(--fg);
+}
+
+.desc {
+  display: block;
+  color: var(--muted);
+}
+
+/* A post: back link, title, its description, the text, the date at the
+   foot. */
+article {
+  position: relative;
+  counter-reset: sn;
+}
+
+.back,
+.toc,
+.sidenote,
+.marginnote {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.back {
+  text-decoration: none;
+}
+
+.post h1 {
+  margin: 1.5rem 0 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.subtitle {
+  margin: 0 0 2rem;
+  color: var(--muted);
+}
+
+.written {
+  margin: 3rem 0 0;
+}
+
+.post h2,
+.post h3 {
+  margin: 2rem 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+  scroll-margin-top: 1rem;
+}
+
+.post h3 {
+  font-weight: normal;
+  font-style: italic;
+}
+
+hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--muted);
+}
+
+blockquote {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--muted);
+  color: var(--muted);
+}
+
+blockquote footer {
+  font-size: 0.875rem;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+figure {
+  margin: 1.5rem 0;
+}
+
+figcaption {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+  padding: 0.25rem 0.75rem 0.25rem 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  font-weight: 600;
+  border-bottom: 1px solid var(--fg);
+}
+
+/* Task lists: the box in place of the bullet. Their boxes are disabled,
+   which tells them from a note's. */
+li:has(> input[type="checkbox"][disabled]) {
+  list-style: none;
+  margin-left: -1.25rem;
+}
+
+/* Code keeps its case, and is coloured in grey alone: keywords bold,
+   comments grey and italic, strings grey. */
+pre,
+code {
+  font: 0.9em/1.5 "IBM Plex Mono", ui-monospace, monospace;
+  text-transform: none;
+}
+
+pre {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  tab-size: 4;
+}
+
+pre code {
+  font-size: 1em; /* not shrunk twice */
+}
+
+.chroma .k, .chroma .kd, .chroma .kn, .chroma .kr, .chroma .kt, .chroma .kc,
+.chroma .kp, .chroma .nt, .chroma .nf, .chroma .fm {
+  font-weight: 600;
+}
+
+.chroma .c, .chroma .c1, .chroma .cm, .chroma .ch, .chroma .cs, .chroma .cp,
+.chroma .cpf {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.chroma .s, .chroma .s1, .chroma .s2, .chroma .sa, .chroma .sb, .chroma .sc,
+.chroma .sd, .chroma .se, .chroma .sh, .chroma .si, .chroma .sx, .chroma .sr,
+.chroma .dl {
+  color: var(--muted);
+}
+
+/* Contents: at the top of a post with two headings or more; in the left
+   margin, following the scroll, once the window is wide enough. */
+.toc {
+  margin: 0 0 2rem;
+}
+
+.toc p {
+  margin: 0 0 0.25rem;
+}
+
+.toc ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toc a {
+  text-decoration: none;
+}
+
+.toc a:hover,
+.post h2:target {
   text-decoration: underline;
-  text-decoration-thickness: 0.1em;
-  text-underline-offset: 0.18em;
 }
 
-a:hover {
-  color: var(--hover);
+/* Notes: a sidenote is numbered, a margin note marked ⊕. On a narrow
+   screen a tap opens one under its line; on a wide one they sit in the
+   right margin. A hidden checkbox does the opening, so no script. */
+input.margin-toggle {
+  display: none;
 }
 
-a:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
+.sidenote,
+.marginnote {
+  display: none;
+  line-height: 1.45;
 }
 
-/* Black on yellow in both modes; white on yellow wouldn't read. */
-::selection {
-  background: var(--yellow);
-  color: #1a1a18;
+label.margin-toggle {
+  cursor: pointer;
 }
 
-/* Read by screen readers, not shown: the name as text. */
+label.sidenote-number::after {
+  counter-increment: sn;
+  content: counter(sn);
+  font-size: 0.7em;
+  vertical-align: super;
+}
+
+.sidenote::before {
+  content: counter(sn) " ";
+}
+
+input.margin-toggle:checked + .sidenote,
+input.margin-toggle:checked + .marginnote {
+  display: block;
+  margin: 0.5rem 0 1rem 1rem;
+}
+
+/* The column (34rem) and 16rem each side. */
+@media (min-width: 75rem) {
+  .sidenote,
+  .marginnote,
+  input.margin-toggle:checked + .sidenote,
+  input.margin-toggle:checked + .marginnote {
+    display: block;
+    float: right;
+    clear: right;
+    width: 13rem;
+    margin: 0 -16rem 0 0;
+  }
+
+  label.margin-toggle:not(.sidenote-number) {
+    display: none;
+  }
+
+  .toc {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -16rem;
+    width: 13rem;
+    margin: 0;
+  }
+
+  .toc nav {
+    position: sticky;
+    top: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
