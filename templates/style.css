@@ -43,38 +43,58 @@
   src: url(/fonts/plex-mono-semibold.woff2) format("woff2");
 }
 
+/* Colours from clrs.cc, each with its light and dark side; the system
+   picks. One accent: blue by day, red by night. */
 :root {
-  --bg: #fff;
-  --fg: #111;
-  --muted: #6b6b6b; /* 5.3:1 on white */
   color-scheme: light dark;
+  --bg: light-dark(#fff, #111); /* white, black */
+  --fg: light-dark(#111, #ddd); /* black, silver */
+  --muted: light-dark(#6b6b6b, #aaa); /* 5.3:1 on white; gray, 8.1:1 on black */
+  --accent: light-dark(#0074d9, #ff4136); /* blue, 4.7:1; red, 5.5:1 */
+  --column: 34rem;
+  --margin: 16rem; /* a note's 13rem and the gap beside it */
+  scrollbar-gutter: stable; /* no sideways jump between short and long pages */
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-reduced-motion: no-preference) {
   :root {
-    --bg: #111;
-    --fg: #eee;
-    --muted: #999; /* 6.6:1 on #111 */
+    scroll-behavior: smooth;
   }
 }
 
 body {
-  max-width: 34rem;
-  margin: 0 auto;
+  max-inline-size: var(--column);
+  margin-inline: auto;
   padding: 3rem 1.25rem;
   background: var(--bg);
   color: var(--fg);
   font: 1rem/1.6 "Inter", system-ui, sans-serif;
   text-transform: lowercase;
+  -webkit-text-size-adjust: 100%; /* no font inflation on phones turned sideways */
+  text-size-adjust: 100%;
 }
 
 /* Posts get a wider column, room for code and drawings. */
 body.post {
-  max-width: 40rem;
+  --column: 40rem;
+}
+
+p,
+li,
+dd {
+  text-wrap: pretty; /* no lone word on a paragraph's last line */
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
 }
 
 nav ul {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   margin: 0 0 3rem;
   padding: 0;
@@ -82,12 +102,20 @@ nav ul {
 }
 
 nav a[aria-current="page"] {
+  color: var(--accent);
   text-decoration: none;
 }
 
 a {
-  color: inherit;
+  color: var(--accent);
+  text-decoration-thickness: from-font;
   text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 em {
@@ -107,7 +135,7 @@ dl {
 }
 
 h2 + dl {
-  margin-top: 0;
+  margin-block-start: 0;
 }
 
 dd {
@@ -116,117 +144,125 @@ dd {
 }
 
 /* Home, now and uses: the label beside its value. */
-.index dl,
-.now dl,
-.uses dl {
-  display: grid;
-  grid-template-columns: 5.5rem 1fr;
-  row-gap: 0.25rem;
+:is(.index, .now, .uses) {
+  & dl {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    row-gap: 0.25rem;
+  }
+
+  & dt {
+    color: var(--muted);
+  }
+
+  & dd {
+    margin: 0;
+    color: var(--fg);
+  }
 }
 
 /* Uses: machines and apps, each split into sections folded away under
    their headings until opened; the marker shows which way. */
-.uses h2 {
-  margin-top: 3rem;
-  color: var(--fg);
-}
+.uses {
+  /* Wide enough for its longest labels, motherboard and microphone. */
+  & dl {
+    grid-template-columns: 6.5rem 1fr;
+    column-gap: 1rem;
+  }
 
-.uses details {
-  margin-top: 1rem;
-}
+  & h2 {
+    margin-block-start: 3rem;
+    color: var(--fg);
+  }
 
-.uses h2 + details {
-  margin-top: 0;
-}
+  & details {
+    margin-block-start: 1rem;
 
-/* A part that folds as a whole, like topology, sits apart as machines
-   and apps do. */
-.uses details:has(> summary h2) {
-  margin-top: 3rem;
-}
+    &[open] {
+      margin-block-end: 2rem;
+    }
+  }
 
-.uses summary {
-  cursor: pointer;
-  list-style: none;
-}
+  & h2 + details {
+    margin-block-start: 0;
+  }
 
-.uses summary::-webkit-details-marker {
-  display: none;
-}
+  /* A part that folds as a whole, like topology, sits apart as machines
+     and apps do. */
+  & details:has(> summary h2) {
+    margin-block-start: 3rem;
+  }
 
-.uses summary::before {
-  content: "▸ ";
-  color: var(--muted);
-}
+  & summary {
+    cursor: pointer;
+    list-style: none;
 
-.uses details[open] > summary::before {
-  content: "▾ ";
-}
+    &::-webkit-details-marker {
+      display: none;
+    }
 
-.uses summary h2,
-.uses summary h3 {
-  display: inline;
-  margin: 0;
-  font-size: 1rem;
-  font-weight: normal;
-  color: var(--fg);
-}
+    &::before {
+      content: "▸ ";
+      color: var(--accent);
+    }
 
-.uses details[open] {
-  margin-bottom: 2rem;
-}
+    & :is(h2, h3, h4) {
+      display: inline;
+      margin: 0;
+      font-size: 1rem;
+      font-weight: normal;
+      color: var(--fg);
+    }
 
-.uses h4 {
-  margin: 1.5rem 0 0.5rem;
-  font-size: 1rem;
-  font-weight: normal;
-  color: var(--muted);
-}
+    & + dl {
+      margin-block-start: 1rem;
+    }
+  }
 
-.uses h4 + dl {
-  margin-top: 0;
-}
+  & details[open] > summary::before {
+    content: "▾ ";
+  }
 
-.uses summary + dl {
-  margin-top: 1rem;
-}
+  /* A machine folds inside its group, set in a little. */
+  & details details {
+    margin-inline-start: 1.25rem;
 
-/* Wide enough for its longest labels, motherboard and microphone. */
-.uses dl {
-  grid-template-columns: 6.5rem 1fr;
-  column-gap: 1rem;
-}
+    &[open] {
+      margin-block-end: 1.5rem;
+    }
+  }
 
-.index dt,
-.now dt,
-.uses dt {
-  color: var(--muted);
-}
+  & h4 {
+    margin: 1.5rem 0 0.5rem;
+    font-size: 1rem;
+    font-weight: normal;
+    color: var(--muted);
 
-.index dd,
-.now dd,
-.uses dd {
-  margin: 0;
-  color: var(--fg);
+    & + dl {
+      margin-block-start: 0;
+    }
+  }
 }
 
 /* --- Posts ---------------------------------------------------------------- */
 
 /* The list: by year, the date beside the title, the description under it. */
-.posts dl {
-  display: grid;
-  grid-template-columns: 4.5rem 1fr;
-  row-gap: 0.75rem;
-}
+.posts {
+  & dl {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    row-gap: 0.75rem;
+  }
 
-.posts dt {
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
+  & dt {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
 
-.posts dd {
-  margin: 0;
-  color: var(--fg);
+  & dd {
+    margin: 0;
+    color: var(--fg);
+  }
 }
 
 .desc {
@@ -241,10 +277,7 @@ article {
   counter-reset: sn;
 }
 
-.back,
-.toc,
-.sidenote,
-.marginnote {
+:is(.back, .toc, .sidenote, .marginnote) {
   font-size: 0.875rem;
   color: var(--muted);
 }
@@ -253,11 +286,26 @@ article {
   text-decoration: none;
 }
 
-.post h1 {
-  margin: 1.5rem 0 0.25rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  line-height: 1.25;
+.post {
+  & h1 {
+    margin: 1.5rem 0 0.25rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  & :is(h2, h3) {
+    margin: 2rem 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--fg);
+    scroll-margin-block-start: 1rem;
+  }
+
+  & h3 {
+    font-weight: normal;
+    font-style: italic;
+  }
 }
 
 .subtitle {
@@ -269,42 +317,28 @@ article {
   margin: 3rem 0 0;
 }
 
-.post h2,
-.post h3 {
-  margin: 2rem 0 0.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--fg);
-  scroll-margin-top: 1rem;
-}
-
-.post h3 {
-  font-weight: normal;
-  font-style: italic;
-}
-
 hr {
-  margin: 2.5rem 0;
+  margin-block: 2.5rem;
   border: 0;
-  border-top: 1px solid var(--muted);
+  border-block-start: 1px solid var(--muted);
 }
 
 blockquote {
   margin: 1.5rem 0;
-  padding-left: 1rem;
-  border-left: 2px solid var(--muted);
+  padding-inline-start: 1rem;
+  border-inline-start: 2px solid var(--muted);
   color: var(--muted);
-}
 
-blockquote footer {
-  font-size: 0.875rem;
+  & footer {
+    font-size: 0.875rem;
+  }
 }
 
 img,
 svg {
   display: block;
-  max-width: 100%;
-  height: auto;
+  max-inline-size: 100%;
+  block-size: auto;
 }
 
 figure {
@@ -317,29 +351,33 @@ figcaption {
 }
 
 table {
-  width: 100%;
-  margin: 1.5rem 0;
+  inline-size: 100%;
+  margin-block: 1.5rem;
   border-collapse: collapse;
   font-variant-numeric: tabular-nums;
 }
 
-th,
-td {
-  padding: 0.25rem 0.75rem 0.25rem 0;
-  text-align: left;
+:is(th, td) {
+  padding-block: 0.25rem;
+  padding-inline: 0 0.75rem;
+  text-align: start;
   vertical-align: top;
 }
 
 th {
   font-weight: 600;
-  border-bottom: 1px solid var(--fg);
+  border-block-end: 1px solid var(--fg);
 }
 
 /* Task lists: the box in place of the bullet. Their boxes are disabled,
    which tells them from a note's. */
 li:has(> input[type="checkbox"][disabled]) {
   list-style: none;
-  margin-left: -1.25rem;
+  margin-inline-start: -1.25rem;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--accent);
 }
 
 /* Code keeps its case, and is coloured in grey alone: keywords bold,
@@ -347,57 +385,59 @@ li:has(> input[type="checkbox"][disabled]) {
 pre,
 code {
   font: 0.9em/1.5 "IBM Plex Mono", ui-monospace, monospace;
+  font-variant-ligatures: none; /* keeps |- and -- as drawn */
   text-transform: none;
 }
 
 pre {
-  margin: 1.5rem 0;
+  margin-block: 1.5rem;
   overflow-x: auto;
   tab-size: 4;
+
+  & code {
+    font-size: 1em; /* not shrunk twice */
+  }
 }
 
-pre code {
-  font-size: 1em; /* not shrunk twice */
-}
+.chroma {
+  & :is(.k, .kd, .kn, .kr, .kt, .kc, .kp, .nt, .nf, .fm) {
+    font-weight: 600;
+  }
 
-.chroma .k, .chroma .kd, .chroma .kn, .chroma .kr, .chroma .kt, .chroma .kc,
-.chroma .kp, .chroma .nt, .chroma .nf, .chroma .fm {
-  font-weight: 600;
-}
+  & :is(.c, .c1, .cm, .ch, .cs, .cp, .cpf) {
+    color: var(--muted);
+    font-style: italic;
+  }
 
-.chroma .c, .chroma .c1, .chroma .cm, .chroma .ch, .chroma .cs, .chroma .cp,
-.chroma .cpf {
-  color: var(--muted);
-  font-style: italic;
-}
-
-.chroma .s, .chroma .s1, .chroma .s2, .chroma .sa, .chroma .sb, .chroma .sc,
-.chroma .sd, .chroma .se, .chroma .sh, .chroma .si, .chroma .sx, .chroma .sr,
-.chroma .dl {
-  color: var(--muted);
+  & :is(.s, .s1, .s2, .sa, .sb, .sc, .sd, .se, .sh, .si, .sx, .sr, .dl) {
+    color: var(--muted);
+  }
 }
 
 /* Contents: at the top of a post with two headings or more; in the left
    margin, following the scroll, once the window is wide enough. */
 .toc {
   margin: 0 0 2rem;
+
+  & p {
+    margin: 0 0 0.25rem;
+  }
+
+  & ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  & a {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
-.toc p {
-  margin: 0 0 0.25rem;
-}
-
-.toc ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.toc a {
-  text-decoration: none;
-}
-
-.toc a:hover,
 .post h2:target {
   text-decoration: underline;
 }
@@ -409,8 +449,7 @@ input.margin-toggle {
   display: none;
 }
 
-.sidenote,
-.marginnote {
+:is(.sidenote, .marginnote) {
   display: none;
   line-height: 1.45;
 }
@@ -430,23 +469,20 @@ label.sidenote-number::after {
   content: counter(sn) " ";
 }
 
-input.margin-toggle:checked + .sidenote,
-input.margin-toggle:checked + .marginnote {
+input.margin-toggle:checked + :is(.sidenote, .marginnote) {
   display: block;
   margin: 0.5rem 0 1rem 1rem;
 }
 
-/* The column (34rem) and 16rem each side. */
-@media (min-width: 75rem) {
-  .sidenote,
-  .marginnote,
-  input.margin-toggle:checked + .sidenote,
-  input.margin-toggle:checked + .marginnote {
+/* A post's column (40rem) and 16rem each side, with the body's padding. */
+@media (width >= 75rem) {
+  :is(.sidenote, .marginnote),
+  input.margin-toggle:checked + :is(.sidenote, .marginnote) {
     display: block;
-    float: right;
-    clear: right;
-    width: 13rem;
-    margin: 0 -16rem 0 0;
+    float: inline-end;
+    clear: inline-end;
+    inline-size: 13rem;
+    margin: 0 calc(-1 * var(--margin)) 0 0;
   }
 
   label.margin-toggle:not(.sidenote-number) {
@@ -455,29 +491,22 @@ input.margin-toggle:checked + .marginnote {
 
   .toc {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: -16rem;
-    width: 13rem;
+    inset-block: 0;
+    inset-inline-start: calc(-1 * var(--margin));
+    inline-size: 13rem;
     margin: 0;
-  }
 
-  .toc nav {
-    position: sticky;
-    top: 2rem;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
+    & nav {
+      position: sticky;
+      inset-block-start: 2rem;
+    }
   }
 }
 
 .visually-hidden {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  inline-size: 1px;
+  block-size: 1px;
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;

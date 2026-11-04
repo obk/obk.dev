@@ -10,10 +10,11 @@ a running list of what's on my machines, inspired by [wesbos.com/uses](https://w
 
 ## machines
 
-<details>
-<summary><h3 id="machines-development">development</h3></summary>
+<details open>
+<summary><h3 id="dev">dev</h3></summary>
 
-#### work laptop
+<details>
+<summary><h4 id="work">work</h4></summary>
 
 os
 : fedora
@@ -30,7 +31,10 @@ memory
 storage
 : kingston nvme, 512 gb
 
-#### macbook – ikari
+</details>
+
+<details>
+<summary><h4 id="ikari">ikari</h4></summary>
 
 model
 : macbook pro, 14 inch
@@ -46,10 +50,13 @@ storage
 
 </details>
 
-<details>
-<summary><h3 id="machines-gaming">gaming</h3></summary>
+</details>
 
-#### desktop – ayanami
+<details open>
+<summary><h3 id="desktop">desktop</h3></summary>
+
+<details>
+<summary><h4 id="ayanami">ayanami</h4></summary>
 
 os
 : windows
@@ -75,7 +82,10 @@ power
 case
 : cooler master masterbox td500 v2
 
-#### peripherals
+</details>
+
+<details>
+<summary><h4 id="peripherals">peripherals</h4></summary>
 
 monitor
 : asus rog strix xg27acg, 1440p at 180 hz
@@ -94,15 +104,44 @@ console
 
 </details>
 
-<details>
+</details>
+
+<details open>
 <summary><h3 id="servers">servers</h3></summary>
 
-#### raspberry pi 5 – soryu
+<details>
+<summary><h4 id="soryu">soryu</h4></summary>
+
+model
+: raspberry pi 5
 
 memory
 : 16 gb
 
-#### beelink gti15 ultra – nagisa
+use
+: a claude code agent
+
+</details>
+
+<details>
+<summary><h4 id="nagisa">nagisa</h4></summary>
+
+model
+: raspberry pi 5
+
+memory
+: 2 gb
+
+use
+: adguard home
+
+</details>
+
+<details>
+<summary><h4 id="akagi">akagi</h4></summary>
+
+model
+: beelink gti15 ultra
 
 os
 : proxmox
@@ -113,10 +152,18 @@ processor
 memory
 : 64 gb
 
-#### vps – katsuragi
+</details>
+
+<details>
+<summary><h4 id="katsuragi">katsuragi</h4></summary>
+
+model
+: a vps
 
 use
 : the tailscale exit node
+
+</details>
 
 </details>
 
@@ -273,21 +320,21 @@ automation
                    | flex mini 2.5g |
                    +----------------+
                             |
-                    . . . . | .  servers  . . . . . . . . .
-                    :       +----------+----------+       :
-                    :       |          |          |       :
-                    :  +--------+ +--------+ +--------+   :
-                    :  | unas 2 | | nagisa | | soryu  |   :
-                    :  +--------+ +--------+ +--------+   :
-                    :              proxmox    adguard     :
-                    :              + immich               :
-                    :              + radarr               :
-                    :              + sonarr               :
-                    :              + prowlarr             :
-                    :              + jellyfin             :
-                    :              + vaultwarden          :
-                    :              + transmission         :
-                    . . . . . . . . . . . . . . . . . . . .
+    .  servers  . . . . . . | . . . . . . . . . . . . . . .
+    :       +------------+--+---------+------------+      :
+    :       |            |            |            |      :
+    :  +---------+  +---------+  +---------+  +---------+ :
+    :  |  unas 2 |  |  akagi  |  |  nagisa |  |  soryu  | :
+    :  +---------+  +---------+  +---------+  +---------+ :
+    :                proxmox      adguard      claude     :
+    :                + immich                  code        :
+    :                + radarr                             :
+    :                + sonarr                             :
+    :                + prowlarr                           :
+    :                + jellyfin                           :
+    :                + vaultwarden                        :
+    :                + transmission                       :
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ```
 
 </details>
