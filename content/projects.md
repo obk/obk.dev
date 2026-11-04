@@ -6,7 +6,8 @@ description: small tools by obk: a git viewer, a site builder, a status page, a 
 url: https://obk.dev/projects/
 ---
 
-small tools, each doing one job, mostly in go. *all of them free software, on github.*
+small tools, each doing one job, mostly in go.\
+*all of them free software, on github.*
 
 ## spinney, my lab for small tools · gpl-3.0
 

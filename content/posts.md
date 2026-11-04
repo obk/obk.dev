@@ -6,4 +6,5 @@ description: posts by obk on systems, tooling, building, and learning.
 url: https://obk.dev/posts/
 ---
 
-posts. *on systems, tooling, building, and learning.*
+posts.\
+*on systems, tooling, building, and learning. follow them by [rss](/feed.xml).*

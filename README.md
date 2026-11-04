@@ -27,9 +27,7 @@ or `static/`.
       feed.xml        the RSS feed
       style.css       the design, inlined into every page
     static/           copied into public/ as is
-      favicon.svg     the icon
-      favicon.ico     the same, drawn from favicon.svg, for browsers
-                      without SVG icons
+      favicon.ico     the icon, at 16 and 32 pixels
       public.asc      the PGP key, linked from the contact list
       fonts/          Inter and IBM Plex Mono, Latin only, with their licenses
     main.go           the build: front matter, Markdown, posts, template, copy

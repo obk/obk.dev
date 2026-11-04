@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-<style>@media (prefers-color-scheme: dark) { circle { fill: #5878be } }</style>
-<circle fill="#1e3878" cx="8" cy="8" r="7"/>
-<rect fill="#c8302a" x="1" y="17" width="14" height="14"/>
-<polygon fill="#e8c018" points="17,16 31,1 31,31"/>
-</svg>
