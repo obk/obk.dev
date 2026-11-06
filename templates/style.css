@@ -56,10 +56,45 @@
   scrollbar-gutter: stable; /* no sideways jump between short and long pages */
 }
 
+/* Motion only for those who want it: a crossfade between pages (where
+   the browser has cross-document view transitions; elsewhere a plain
+   load), folds that slide, markers that turn. All of it CSS. */
 @media (prefers-reduced-motion: no-preference) {
   :root {
     scroll-behavior: smooth;
+    interpolate-size: allow-keywords; /* lets a fold grow to its height */
   }
+
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-group(root) {
+    animation-duration: 0.15s;
+  }
+
+  .uses details::details-content {
+    transition:
+      block-size 0.2s ease,
+      content-visibility 0.2s allow-discrete;
+  }
+
+  .uses summary::before {
+    transition: rotate 0.2s ease;
+  }
+
+  a {
+    transition: text-decoration-color 0.15s;
+  }
+}
+
+/* The menu stays put while the page under it changes. */
+nav[aria-label="pages"] {
+  view-transition-name: pages;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 25%, transparent);
 }
 
 body {
@@ -109,7 +144,12 @@ nav a[aria-current="page"] {
 a {
   color: var(--accent);
   text-decoration-thickness: from-font;
+  text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
   text-underline-offset: 0.2em;
+
+  &:hover {
+    text-decoration-color: currentcolor;
+  }
 }
 
 :focus-visible {
@@ -178,6 +218,16 @@ dd {
   & details {
     margin-block-start: 1rem;
 
+    /* Closed, the fold has no height; open, its own. */
+    &::details-content {
+      block-size: 0;
+      overflow: clip;
+    }
+
+    &[open]::details-content {
+      block-size: auto;
+    }
+
     &[open] {
       margin-block-end: 2rem;
     }
@@ -201,8 +251,14 @@ dd {
       display: none;
     }
 
+    /* One marker that turns a quarter when the fold opens. */
     &::before {
-      content: "▸ ";
+      content: "▸";
+      display: inline-block;
+      inline-size: 0.75em;
+      margin-inline-end: 0.25em;
+      line-height: 1;
+      text-align: center; /* so it turns about its own middle */
       color: var(--accent);
     }
 
@@ -220,7 +276,7 @@ dd {
   }
 
   & details[open] > summary::before {
-    content: "▾ ";
+    rotate: 90deg;
   }
 
   /* A machine folds inside its group, set in a little. */
