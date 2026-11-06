@@ -138,7 +138,7 @@ use
 </details>
 
 <details>
-<summary><h4 id="akagi">akagi</h4></summary>
+<summary><h4 id="magi">magi</h4></summary>
 
 model
 : beelink gti15 ultra
@@ -324,7 +324,7 @@ automation
         :       +-----------+-----------+-----------+     :
         :       |           |           |           |     :
         :  +--------+  +--------+  +--------+  +--------+ :
-        :  | unas 2 |  | akagi  |  | nagisa |  | soryu  | :
+        :  | unas 2 |  |  magi  |  | nagisa |  | soryu  | :
         :  +--------+  +--------+  +--------+  +--------+ :
         :               proxmox     adguard     claude    :
         :               + immich                code      :
