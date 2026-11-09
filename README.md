@@ -16,10 +16,8 @@ folder is emptied first, so the build refuses one that holds `content/`
 or `static/`.
 
     content/
-      index.md        home, at /: the bio and the contact list
-      projects.md     /projects/: the projects, in lists by kind
-      now.md          /now/: what i'm doing now
-      uses.md         /uses/: the software i work with
+      index.md        home, at /: the bio and quick links, computers and projects
+      uses.md         /uses/: machines, the network and apps
       posts.md        /posts/: the list of posts, filled in by the build
       posts/          one Markdown file per post, at /posts/<name>/
     templates/
@@ -29,8 +27,11 @@ or `static/`.
     static/           copied into public/ as is
       favicon.ico     the icon, at 16 and 32 pixels
       public.asc      the PGP key, linked from the contact list
+      banner.mp4      the loop behind the name, with banner.jpg as its still
+      banner-uses.*   the same on the uses page
       fonts/          Inter and IBM Plex Mono, Latin only, with their licenses
     main.go           the build: front matter, Markdown, posts, template, copy
+    letterboxd.go     the newest films from letterboxd, for the movies section
     public/           the site, built; not committed
 
 ## Editing the pages
@@ -103,17 +104,25 @@ Posts take, after simple-site-generator:
 
 ## Design
 
-As little as reads well: one narrow column, black on white (or white on
-black, following the system), grey for the quieter half, plain
-underlined links. No animation, no JavaScript.
+One long page in IBM Plex Mono, after [kognise.dev](https://kognise.dev):
+the name at the top in Inter over a faint, pixelated loop
+(`static/banner.mp4`, its first frame for those who ask for less motion), a
+pronunciation in orange,
+quick rows for reaching out, and "on this page" with its links filled
+in as you scroll. Links wear [brackets] and fill with their colour
+under the pointer. Colours are open-color's: grey paper, violet links
+that turn purple once visited, orange for the pronunciation, with a
+dark side following the system.
 
-Text is set in [Inter](https://rsms.me/inter/), code in
-[IBM Plex Mono](https://www.ibm.com/plex/), both served by the site
-itself from `static/fonts/`, in Google Fonts' Latin subset: Inter
-variable, upright and italic (about 50 KB each, the italic loaded only
-where a post uses it), and Plex Mono regular, italic and semibold
-(about 15 KB each, loaded only on pages with code). A character
-outside the subset, like ← or ⊕, comes from the system's fonts.
+## Movies
+
+`<!-- letterboxd -->` in a page becomes the ten newest films from the
+public Letterboxd diary of `letterboxdUser` (in `letterboxd.go`), read
+from its RSS feed at build time: poster, title, year, stars, ♥ for a
+like and "again" for a rewatch. The posters are copied into
+`public/films/`, so visitors never load anything from Letterboxd. If
+the feed can't be read, the build carries on and the section is a plain
+link to the diary.
 
 ## Deploy
 

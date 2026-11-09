@@ -84,4 +84,4 @@ goldmark
 
 ---
 
-that's all for now. the next posts will be about the tools in [projects](/projects/).
+that's all for now. the next posts will be about the tools in [projects](/#projects).

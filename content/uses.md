@@ -1,20 +1,25 @@
 ---
 title: uses · obk
-menu: uses
-order: 4
-description: the machines and software obk uses, for development and for gaming.
+description: the machines, network and software obk uses, for development and for gaming.
 url: https://obk.dev/uses/
 ---
 
-a running list of what's on my machines, inspired by [wesbos.com/uses](https://wesbos.com/uses) and the [uses.tech](https://uses.tech) directory.
+## uses!
 
-## machines
+a running list of what's on my machines, inspired by [wesbos.com/uses](https://wesbos.com/uses) and the [uses.tech](https://uses.tech) directory. the ones with names are named after evangelion.
 
-<details open>
-<summary><h3 id="dev">dev</h3></summary>
+<nav class="on-this-page" aria-label="on this page">
+<p>on this page:</p>
+<ul>
+<li><a href="#machines">machines!</a></li>
+<li><a href="#the-network">the network!</a></li>
+<li><a href="#apps">apps!</a></li>
+</ul>
+</nav>
 
-<details>
-<summary><h4 id="work">work</h4></summary>
+## machines!
+
+### work, the work laptop
 
 os
 : fedora
@@ -31,10 +36,7 @@ memory
 storage
 : kingston nvme, 512 gb
 
-</details>
-
-<details>
-<summary><h4 id="ikari">ikari</h4></summary>
+### ikari, the macbook
 
 model
 : macbook pro, 14 inch
@@ -48,15 +50,7 @@ memory
 storage
 : 1 tb
 
-</details>
-
-</details>
-
-<details open>
-<summary><h3 id="desktop">desktop</h3></summary>
-
-<details>
-<summary><h4 id="ayanami">ayanami</h4></summary>
+### ayanami, the desktop
 
 os
 : windows
@@ -82,10 +76,7 @@ power
 case
 : cooler master masterbox td500 v2
 
-</details>
-
-<details>
-<summary><h4 id="peripherals">peripherals</h4></summary>
+### at the desk
 
 monitor
 : asus rog strix xg27acg, 1440p at 180 hz
@@ -102,90 +93,21 @@ microphone
 console
 : sony playstation 5 digital edition, with a kingston fury renegade 2 tb
 
-</details>
+### the servers
 
-</details>
+soryu
+: raspberry pi 5, 16 gb: a claude code agent
 
-<details open>
-<summary><h3 id="servers">servers</h3></summary>
+nagisa
+: raspberry pi 5, 2 gb: adguard home
 
-<details>
-<summary><h4 id="soryu">soryu</h4></summary>
+magi
+: beelink gti15 ultra, intel core ultra 9, 64 gb: proxmox
 
-model
-: raspberry pi 5
+katsuragi
+: a vps: the tailscale exit node
 
-memory
-: 16 gb
-
-use
-: a claude code agent
-
-</details>
-
-<details>
-<summary><h4 id="nagisa">nagisa</h4></summary>
-
-model
-: raspberry pi 5
-
-memory
-: 2 gb
-
-use
-: adguard home
-
-</details>
-
-<details>
-<summary><h4 id="magi">magi</h4></summary>
-
-model
-: beelink gti15 ultra
-
-os
-: proxmox
-
-processor
-: intel core ultra 9
-
-memory
-: 64 gb
-
-</details>
-
-<details>
-<summary><h4 id="katsuragi">katsuragi</h4></summary>
-
-model
-: a vps
-
-use
-: the tailscale exit node
-
-</details>
-
-</details>
-
-<details>
-<summary><h3 id="network">network</h3></summary>
-
-gateway
-: unifi ux7
-
-switch
-: unifi flex 2.5g poe, unifi flex mini and unifi flex mini 2.5g
-
-wifi
-: unifi u7 pro
-
-nas
-: unifi unas 2, with two seagate exos 8 tb
-
-</details>
-
-<details>
-<summary><h3 id="other-devices">other devices</h3></summary>
+### everything else
 
 phone
 : iphone 15
@@ -205,90 +127,21 @@ tv
 music
 : ipod classic, 5th generation, with a 256 gb ssd
 
-</details>
+## the network!
 
-## apps
+gateway
+: unifi ux7
 
-<details>
-<summary><h3 id="apps-development">development</h3></summary>
+switch
+: unifi flex 2.5g poe, unifi flex mini and unifi flex mini 2.5g
 
-editor
-: zed
+wifi
+: unifi u7 pro
 
-font
-: lilex nerd font
+nas
+: unifi unas 2, with two seagate exos 8 tb
 
-theme
-: catppuccin: latte by day, mocha by night
-
-language
-: go, mostly
-
-containers
-: podman on linux; orbstack on macos
-
-assistant
-: claude code
-
-shell
-: fish, with oh my posh
-
-terminal
-: ghostty
-
-multiplexer
-: herdr
-
-</details>
-
-<details>
-<summary><h3 id="everyday">everyday</h3></summary>
-
-browser
-: helium
-
-chat
-: signal and discord
-
-music
-: spotify
-
-video
-: vlc on linux; iina on macos
-
-menu bar
-: stats and aldente, on macos
-
-archives
-: keka, on macos
-
-</details>
-
-<details>
-<summary><h3 id="apps-servers">servers</h3></summary>
-
-media
-: jellyfin
-
-photos
-: immich
-
-passwords
-: vaultwarden
-
-network
-: tailscale
-
-dns
-: adguard home
-
-automation
-: sonarr, radarr and prowlarr, with transmission
-
-</details>
-
-<details>
-<summary><h2 id="topology">topology</h2></summary>
+and how it all hangs together:
 
 ```text
 +-----------+
@@ -337,4 +190,73 @@ automation
         . . . . . . . . . . . . . . . . . . . . . . . . . .
 ```
 
-</details>
+## apps!
+
+### for development
+
+editor
+: zed
+
+font
+: lilex nerd font
+
+theme
+: catppuccin: latte by day, mocha by night
+
+language
+: go, mostly
+
+containers
+: podman on linux; orbstack on macos
+
+assistant
+: claude code
+
+shell
+: fish, with oh my posh
+
+terminal
+: ghostty
+
+multiplexer
+: herdr
+
+### every day
+
+browser
+: helium
+
+chat
+: signal and discord
+
+music
+: spotify
+
+video
+: vlc on linux; iina on macos
+
+menu bar
+: stats and aldente, on macos
+
+archives
+: keka, on macos
+
+### on the servers
+
+media
+: jellyfin
+
+photos
+: immich
+
+passwords
+: vaultwarden
+
+network
+: tailscale
+
+dns
+: adguard home
+
+automation
+: sonarr, radarr and prowlarr, with transmission

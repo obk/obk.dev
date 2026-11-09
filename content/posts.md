@@ -1,10 +1,9 @@
 ---
-title: posts · obk
-menu: posts
-order: 2
-description: posts by obk on systems, tooling, building, and learning.
+title: writing · obk
+description: things obk has written, on systems, tooling, building, and learning.
 url: https://obk.dev/posts/
 ---
 
-posts.\
-*on systems, tooling, building, and learning. follow them by [rss](/feed.xml).*
+## writing!
+
+things i've written, on systems, tooling, building, and learning. follow them by [rss](/feed.xml).

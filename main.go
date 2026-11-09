@@ -170,6 +170,10 @@ func build(src, out string) (int, error) {
 			body += list.String()
 		}
 
+		if strings.Contains(body, filmsMark) {
+			body = strings.Replace(body, filmsMark, films(out, 10), 1)
+		}
+
 		data := map[string]any{
 			"Name":        p.name,
 			"Title":       p.meta["title"],

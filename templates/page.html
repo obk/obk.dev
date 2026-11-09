@@ -11,9 +11,9 @@
 {{end}}<meta property="og:title" content="{{.Title}}">
 <meta property="og:type" content="website">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#fff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#111" media="(prefers-color-scheme: dark)">
-<link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="theme-color" content="#f8f9fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141517" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="/fonts/plex-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32">
 <link rel="alternate" type="application/rss+xml" title="obk" href="/feed.xml">
 <script type="speculationrules">{"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script>
@@ -21,28 +21,52 @@
 {{.Style}}</style>
 </head>
 <body class="{{.Name}}">
-{{with .Menu}}<header>
-<nav aria-label="pages">
-<ul>
-{{range .}}<li><a href="{{.Href}}"{{if .Current}} aria-current="page"{{end}}>{{.Label}}</a></li>
-{{end}}</ul>
-</nav>
-</header>
-{{end}}<main>
+<main>
+{{if eq .Name "index"}}<video class="banner" src="/banner.mp4" poster="/banner.jpg" muted loop playsinline preload="auto" aria-hidden="true"></video>
+{{else if eq .Name "uses"}}<video class="banner" src="/banner-uses.mp4" poster="/banner-uses.jpg" muted loop playsinline preload="auto" aria-hidden="true"></video>
+{{end}}<header class="masthead">
+{{if eq .Name "index"}}<h1 class="wordmark">obk</h1>
+{{else}}<p class="wordmark"><a href="/">obk</a></p>
+{{end}}</header>
 {{if .Post}}<article>
-<a class="back" href="/posts/">← posts</a>
+<p class="back"><a href="/posts/">← things i've written</a></p>
 <h1>{{.Title}}</h1>
 {{with .Description}}<p class="subtitle">{{.}}</p>
-{{end}}{{with .Contents}}<aside class="toc"><nav aria-label="contents">
-<p>contents</p>
-<ol>
+{{end}}{{with .Contents}}<nav class="on-this-page" aria-label="on this page">
+<p>on this page:</p>
+<ul>
 {{range .}}<li><a href="#{{.ID}}">{{.Text}}</a></li>
-{{end}}</ol>
-</nav></aside>
+{{end}}</ul>
+</nav>
 {{end}}{{.Body}}
 <p class="subtitle written">written on <time datetime="{{.DateTime}}">{{.Date}}</time>.</p>
 </article>
-{{else}}<h1 class="visually-hidden">{{.Title}}</h1>
-{{.Body}}{{end}}</main>
+{{else}}{{.Body}}{{end}}</main>
+<footer>
+<p><a href="/">home</a> <a href="/uses/">uses</a> <a href="/posts/">writing</a> <a href="/feed.xml">rss</a> <a href="https://github.com/obk/obk.dev">source</a></p>
+</footer>
+<script>
+// The banner loops, unless the system asks for less motion; then it
+// stays on its first frame.
+const banner = document.querySelector(".banner");
+if (banner && !matchMedia("(prefers-reduced-motion: reduce)").matches) banner.play().catch(() => {});
+
+// "On this page": the link of the section being read is filled in,
+// that is the last heading above two fifths of the window.
+const links = [...document.querySelectorAll(".on-this-page a")]
+  .map((a) => [document.getElementById(decodeURIComponent(a.hash.slice(1))), a])
+  .filter(([h]) => h);
+if (links.length) {
+  let queued = false;
+  const mark = () => {
+    queued = false;
+    let current = null;
+    for (const [h, a] of links) if (h.getBoundingClientRect().top < innerHeight * 0.4) current = a;
+    for (const [, a] of links) a.classList.toggle("active", a === current);
+  };
+  addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(mark); } }, { passive: true });
+  mark();
+}
+</script>
 </body>
 </html>

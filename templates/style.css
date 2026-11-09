@@ -1,8 +1,7 @@
-/* Inlined into every page by main.go. As little as reads well: Inter,
-   black on white, one narrow column, plain links. */
+/* Inlined into every page by main.go. One long page in IBM Plex Mono,
+   after kognise.dev: grey paper, links in [brackets] that fill under the
+   pointer, a name you can hear, and "on this page" that follows along. */
 
-/* Inter for text, IBM Plex Mono for code, both served by the site, the
-   Latin subset only. Inter is variable, so one file holds every weight. */
 @font-face {
   font-family: "Inter";
   font-style: normal;
@@ -10,7 +9,6 @@
   font-display: swap;
   src: url(/fonts/inter.woff2) format("woff2");
 }
-
 @font-face {
   font-family: "Inter";
   font-style: italic;
@@ -18,7 +16,6 @@
   font-display: swap;
   src: url(/fonts/inter-italic.woff2) format("woff2");
 }
-
 @font-face {
   font-family: "IBM Plex Mono";
   font-style: normal;
@@ -26,7 +23,6 @@
   font-display: swap;
   src: url(/fonts/plex-mono.woff2) format("woff2");
 }
-
 @font-face {
   font-family: "IBM Plex Mono";
   font-style: italic;
@@ -34,7 +30,6 @@
   font-display: swap;
   src: url(/fonts/plex-mono-italic.woff2) format("woff2");
 }
-
 @font-face {
   font-family: "IBM Plex Mono";
   font-style: normal;
@@ -43,416 +38,324 @@
   src: url(/fonts/plex-mono-semibold.woff2) format("woff2");
 }
 
-/* Colours from clrs.cc, each with its light and dark side; the system
-   picks. One accent: blue by day, red by night. */
+/* Colours from open-color: grey paper, violet links that turn purple
+   once visited, orange for the pronunciation. Each with a dark side. */
 :root {
   color-scheme: light dark;
-  --bg: light-dark(#fff, #111); /* white, black */
-  --fg: light-dark(#111, #ddd); /* black, silver */
-  --muted: light-dark(#6b6b6b, #aaa); /* 5.3:1 on white; gray, 8.1:1 on black */
-  --accent: light-dark(#0074d9, #ff4136); /* blue, 4.7:1; red, 5.5:1 */
-  --column: 34rem;
+  --bg: light-dark(#f8f9fa, #141517);
+  --fg: light-dark(#212529, #dee2e6);
+  --muted: light-dark(#5c636a, #a5adb5);
+  --line: light-dark(#ced4da, #373a40);
+  --well: light-dark(#e9ecef, #1f2226);
+  --link: light-dark(#6741d9, #9775fa);
+  --visited: light-dark(#9c36b5, #da77f2);
+  --ipa: light-dark(#d9480f, #ff922b);
+  --on-fill: light-dark(#fff, #141517);
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  --column: 50rem;
   --margin: 16rem; /* a note's 13rem and the gap beside it */
-  scrollbar-gutter: stable; /* no sideways jump between short and long pages */
+  scrollbar-gutter: stable;
 }
 
-/* Motion only for those who want it: a crossfade between pages (where
-   the browser has cross-document view transitions; elsewhere a plain
-   load), folds that slide, markers that turn. All of it CSS. */
 @media (prefers-reduced-motion: no-preference) {
   :root {
     scroll-behavior: smooth;
-    interpolate-size: allow-keywords; /* lets a fold grow to its height */
   }
 
   @view-transition {
     navigation: auto;
   }
-
-  ::view-transition-group(root) {
-    animation-duration: 0.15s;
-  }
-
-  .uses details::details-content {
-    transition:
-      block-size 0.2s ease,
-      content-visibility 0.2s allow-discrete;
-  }
-
-  .uses summary::before {
-    transition: rotate 0.2s ease;
-  }
-
-  a {
-    transition: text-decoration-color 0.15s;
-  }
 }
 
-/* The menu stays put while the page under it changes. */
-nav[aria-label="pages"] {
-  view-transition-name: pages;
-}
-
-::selection {
-  background: color-mix(in oklab, var(--accent) 25%, transparent);
+* {
+  box-sizing: border-box;
 }
 
 body {
-  max-inline-size: var(--column);
-  margin-inline: auto;
-  padding: 3rem 1.25rem;
+  margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font: 1rem/1.6 "Inter", system-ui, sans-serif;
-  text-transform: lowercase;
-  -webkit-text-size-adjust: 100%; /* no font inflation on phones turned sideways */
+  font: 1rem/1.8 var(--mono);
+  -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
 
-/* Posts get a wider column, room for code and drawings. */
-body.post {
-  --column: 40rem;
+main,
+body > footer {
+  max-inline-size: var(--column);
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+main {
+  padding-block-end: 20px;
 }
 
 p,
 li,
 dd {
-  text-wrap: pretty; /* no lone word on a paragraph's last line */
+  text-wrap: pretty;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--muted) 45%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+/* Links wear brackets, and fill with their colour under the pointer. */
+a {
+  color: var(--link);
+  text-decoration: none;
+
+  &::before {
+    content: "[";
+  }
+
+  &::after {
+    content: "]";
+  }
+
+  &:hover,
+  &.active {
+    background: var(--link);
+    color: var(--on-fill);
+  }
+
+  &:not([href^="#"]):visited {
+    color: var(--visited);
+
+    &:hover {
+      background: var(--visited);
+      color: var(--on-fill);
+    }
+  }
+}
+
+/* --- The name at the top ------------------------------------------------ */
+
+/* The banner behind the name: a short loop, scaled up with its pixels
+   showing, faint, and fading out downwards. */
+.banner {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  z-index: -1;
+  display: block;
+  inline-size: min(900px, 100%);
+  block-size: auto;
+  aspect-ratio: 480 / 266;
+  margin-inline: auto;
+  object-fit: cover;
+  object-position: 50% 55%; /* a square clip shows its middle */
+  image-rendering: pixelated;
+  opacity: 0.22;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 50% 60% at 50% 30%, #000 35%, transparent);
+}
+
+.masthead {
+  padding-block-start: 80px;
+}
+
+.wordmark {
+  margin: 0;
+  font: 800 3.25rem/1.1 "Inter", system-ui, sans-serif;
+  letter-spacing: -0.04em;
+
+  & a {
+    color: inherit;
+
+    &::before,
+    &::after {
+      content: none;
+    }
+
+    &:hover,
+    &:visited:hover {
+      background: none;
+      color: var(--link);
+    }
+  }
+}
+
+/* The pronunciation, in orange. */
+.ipa {
+  color: var(--ipa);
+  white-space: nowrap;
+}
+
+/* --- Text --------------------------------------------------------------- */
+
+p,
+ul:not(li ul),
+ol:not(li ol),
+pre {
+  margin-block: 20px;
 }
 
 h1,
 h2,
 h3,
-h4 {
-  text-wrap: balance;
-}
-
-nav ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin: 0 0 3rem;
-  padding: 0;
-  list-style: none;
-}
-
-nav a[aria-current="page"] {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-a {
-  color: var(--accent);
-  text-decoration-thickness: from-font;
-  text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
-  text-underline-offset: 0.2em;
-
-  &:hover {
-    text-decoration-color: currentcolor;
-  }
-}
-
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
-em {
-  font-style: normal;
-  color: var(--muted);
+strong {
+  font-weight: 600;
 }
 
 h2 {
-  margin: 2.5rem 0 0.5rem;
+  margin: 60px 0 0;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  scroll-margin-block-start: 20px;
+}
+
+h3 {
+  margin: 36px 0 0;
   font-size: 1rem;
-  font-weight: normal;
-  color: var(--muted);
 }
 
+em {
+  font-style: italic;
+}
+
+/* Labels beside their values: the quick rows at the top, and every list
+   of parts below. */
 dl {
-  margin: 1.5rem 0 0;
+  display: grid;
+  grid-template-columns: 13ch 1fr;
+  gap: 0 1ch;
+  margin-block: 20px;
 }
 
-h2 + dl {
-  margin-block-start: 0;
+dt {
+  color: var(--muted);
 }
 
 dd {
-  margin: 0 0 0.75rem;
-  color: var(--muted);
+  margin: 0;
 }
 
-/* Home, now and uses: the label beside its value. */
-:is(.index, .now, .uses) {
-  & dl {
-    display: grid;
-    grid-template-columns: 5.5rem 1fr;
-    row-gap: 0.25rem;
-  }
+.index main > dl:first-of-type dt {
+  color: var(--fg);
+}
 
-  & dt {
-    color: var(--muted);
+/* A list whose labels are links, like the projects: each name on its
+   own line, what it is set in under it. */
+dl:has(> dt > a) {
+  grid-template-columns: 1fr;
+
+  & dd {
+    margin: 0 0 12px 4ch;
   }
+}
+
+.index main > dl:first-of-type {
+  grid-template-columns: 13ch 1fr;
 
   & dd {
     margin: 0;
-    color: var(--fg);
   }
 }
 
-/* Uses: machines and apps, each split into sections folded away under
-   their headings until opened; the marker shows which way. */
-.uses {
-  /* Wide enough for its longest labels, motherboard and microphone. */
-  & dl {
-    grid-template-columns: 6.5rem 1fr;
-    column-gap: 1rem;
+/* "On this page", set in under its label. */
+.on-this-page {
+  margin-block: 20px;
+
+  & p {
+    margin: 0;
   }
 
-  & h2 {
-    margin-block-start: 3rem;
-    color: var(--fg);
-  }
-
-  & details {
-    margin-block-start: 1rem;
-
-    /* Closed, the fold has no height; open, its own. */
-    &::details-content {
-      block-size: 0;
-      overflow: clip;
-    }
-
-    &[open]::details-content {
-      block-size: auto;
-    }
-
-    &[open] {
-      margin-block-end: 2rem;
-    }
-  }
-
-  & h2 + details {
-    margin-block-start: 0;
-  }
-
-  /* A part that folds as a whole, like topology, sits apart as machines
-     and apps do. */
-  & details:has(> summary h2) {
-    margin-block-start: 3rem;
-  }
-
-  & summary {
-    cursor: pointer;
+  & ul {
+    margin: 0 0 0 4ch;
+    padding: 0;
     list-style: none;
-
-    &::-webkit-details-marker {
-      display: none;
-    }
-
-    /* One marker that turns a quarter when the fold opens. */
-    &::before {
-      content: "▸";
-      display: inline-block;
-      inline-size: 0.75em;
-      margin-inline-end: 0.25em;
-      line-height: 1;
-      text-align: center; /* so it turns about its own middle */
-      color: var(--accent);
-    }
-
-    & :is(h2, h3, h4) {
-      display: inline;
-      margin: 0;
-      font-size: 1rem;
-      font-weight: normal;
-      color: var(--fg);
-    }
-
-    & + dl {
-      margin-block-start: 1rem;
-    }
   }
 
-  & details[open] > summary::before {
-    rotate: 90deg;
+  & li {
+    padding-block: 2px;
   }
-
-  /* A machine folds inside its group, set in a little. */
-  & details details {
-    margin-inline-start: 1.25rem;
-
-    &[open] {
-      margin-block-end: 1.5rem;
-    }
-  }
-
-  & h4 {
-    margin: 1.5rem 0 0.5rem;
-    font-size: 1rem;
-    font-weight: normal;
-    color: var(--muted);
-
-    & + dl {
-      margin-block-start: 0;
-    }
-  }
-}
-
-/* --- Posts ---------------------------------------------------------------- */
-
-/* The list: by year, the date beside the title, the description under it. */
-.posts {
-  & dl {
-    display: grid;
-    grid-template-columns: 4.5rem 1fr;
-    row-gap: 0.75rem;
-  }
-
-  & dt {
-    color: var(--muted);
-    font-variant-numeric: tabular-nums;
-  }
-
-  & dd {
-    margin: 0;
-    color: var(--fg);
-  }
-}
-
-.desc {
-  display: block;
-  color: var(--muted);
-}
-
-/* A post: back link, title, its description, the text, the date at the
-   foot. */
-article {
-  position: relative;
-  counter-reset: sn;
-}
-
-:is(.back, .toc, .sidenote, .marginnote) {
-  font-size: 0.875rem;
-  color: var(--muted);
-}
-
-.back {
-  text-decoration: none;
-}
-
-.post {
-  & h1 {
-    margin: 1.5rem 0 0.25rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-    line-height: 1.25;
-  }
-
-  & :is(h2, h3) {
-    margin: 2rem 0 0.5rem;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--fg);
-    scroll-margin-block-start: 1rem;
-  }
-
-  & h3 {
-    font-weight: normal;
-    font-style: italic;
-  }
-}
-
-.subtitle {
-  margin: 0 0 2rem;
-  color: var(--muted);
-}
-
-.written {
-  margin: 3rem 0 0;
-}
-
-hr {
-  margin-block: 2.5rem;
-  border: 0;
-  border-block-start: 1px solid var(--muted);
 }
 
 blockquote {
-  margin: 1.5rem 0;
-  padding-inline-start: 1rem;
-  border-inline-start: 2px solid var(--muted);
-  color: var(--muted);
+  margin: 30px 0;
+  padding: 10px 10px 10px 30px;
+  border-inline-start: 4px solid var(--muted);
+  background: var(--well);
+
+  & p {
+    margin-block: 14px;
+  }
 
   & footer {
-    font-size: 0.875rem;
+    color: var(--muted);
   }
 }
 
+hr {
+  height: 1px;
+  margin: 40px 0;
+  border: 0;
+  background: var(--line);
+}
+
 img,
-svg {
+video {
   display: block;
   max-inline-size: 100%;
   block-size: auto;
 }
 
 figure {
-  margin: 1.5rem 0;
+  margin: 30px 0;
 }
 
 figcaption {
-  font-size: 0.875rem;
   color: var(--muted);
 }
 
 table {
   inline-size: 100%;
-  margin-block: 1.5rem;
   border-collapse: collapse;
   font-variant-numeric: tabular-nums;
 }
 
 :is(th, td) {
-  padding-block: 0.25rem;
-  padding-inline: 0 0.75rem;
+  padding: 4px 1ch 4px 0;
+  border-block-end: 1px solid var(--line);
   text-align: start;
   vertical-align: top;
 }
 
-th {
-  font-weight: 600;
-  border-block-end: 1px solid var(--fg);
+input[type="checkbox"] {
+  accent-color: var(--link);
 }
 
-/* Task lists: the box in place of the bullet. Their boxes are disabled,
-   which tells them from a note's. */
 li:has(> input[type="checkbox"][disabled]) {
   list-style: none;
-  margin-inline-start: -1.25rem;
+  margin-inline-start: -1.5rem;
 }
 
-input[type="checkbox"] {
-  accent-color: var(--accent);
-}
-
-/* Code keeps its case, and is coloured in grey alone: keywords bold,
-   comments grey and italic, strings grey. */
+/* Code, and the network drawing: no brackets on links inside, and wide
+   lines scroll rather than wrap. */
 pre,
 code {
-  font: 0.9em/1.5 "IBM Plex Mono", ui-monospace, monospace;
-  font-variant-ligatures: none; /* keeps |- and -- as drawn */
-  text-transform: none;
+  font-family: var(--mono);
+  font-variant-ligatures: none;
 }
 
 pre {
-  margin-block: 1.5rem;
   overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.5;
   tab-size: 4;
+}
 
-  & code {
-    font-size: 1em; /* not shrunk twice */
-  }
+:not(pre) > code {
+  padding: 1px 4px;
+  background: var(--well);
+  border-radius: 3px;
 }
 
 .chroma {
@@ -466,51 +369,115 @@ pre {
   }
 
   & :is(.s, .s1, .s2, .sa, .sb, .sc, .sd, .se, .sh, .si, .sx, .sr, .dl) {
+    color: var(--ipa);
+  }
+}
+
+/* Films from letterboxd: posters in rows, the title under each, then
+   the year, the stars and the day it was watched. */
+.films {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+  gap: 24px 16px;
+  padding: 0;
+  list-style: none;
+
+  & a {
+    display: block;
+
+    &::before,
+    &::after {
+      content: none;
+    }
+
+    &:hover,
+    &:visited:hover {
+      background: none;
+      color: var(--link);
+    }
+  }
+
+  & img {
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 2 / 3;
+    margin-block-end: 6px;
+    border-radius: 3px;
+    background: var(--well);
+    image-rendering: auto;
+    transition: transform 0.15s;
+  }
+
+  & a:hover img {
+    transform: translateY(-3px);
+  }
+
+  & li {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  & .film-title {
+    display: block;
+  }
+
+  & .film-meta {
     color: var(--muted);
   }
 }
 
-/* Contents: at the top of a post with two headings or more; in the left
-   margin, following the scroll, once the window is wide enough. */
-.toc {
-  margin: 0 0 2rem;
+/* --- Posts -------------------------------------------------------------- */
 
-  & p {
-    margin: 0 0 0.25rem;
-  }
+.posts dl {
+  grid-template-columns: 9ch 1fr;
+  row-gap: 10px;
+}
 
-  & ol {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
+.desc {
+  display: block;
+  color: var(--muted);
+}
 
-  & a {
-    text-decoration: none;
+article {
+  position: relative;
+  counter-reset: sn;
 
-    &:hover {
-      text-decoration: underline;
-    }
+  & h1 {
+    margin: 40px 0 0;
+    font-size: 1.5rem;
+    line-height: 1.4;
   }
 }
 
-.post h2:target {
-  text-decoration: underline;
+.back {
+  margin-block-start: 40px;
 }
 
-/* Notes: a sidenote is numbered, a margin note marked ⊕. On a narrow
-   screen a tap opens one under its line; on a wide one they sit in the
-   right margin. A hidden checkbox does the opening, so no script. */
+.subtitle {
+  margin-block-start: 4px;
+  color: var(--muted);
+}
+
+.written {
+  margin-block-start: 60px;
+}
+
+/* Notes: a sidenote is numbered, a margin note marked ⊕. Narrow, a tap
+   opens one under its line; wide, they sit in the right margin. A hidden
+   checkbox does the opening. */
 input.margin-toggle {
   display: none;
 }
 
 :is(.sidenote, .marginnote) {
   display: none;
-  line-height: 1.45;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
 }
 
 label.margin-toggle {
+  color: var(--link);
   cursor: pointer;
 }
 
@@ -527,11 +494,10 @@ label.sidenote-number::after {
 
 input.margin-toggle:checked + :is(.sidenote, .marginnote) {
   display: block;
-  margin: 0.5rem 0 1rem 1rem;
+  margin: 10px 0 10px 4ch;
 }
 
-/* A post's column (40rem) and 16rem each side, with the body's padding. */
-@media (width >= 75rem) {
+@media (width >= 84rem) {
   :is(.sidenote, .marginnote),
   input.margin-toggle:checked + :is(.sidenote, .marginnote) {
     display: block;
@@ -544,21 +510,40 @@ input.margin-toggle:checked + :is(.sidenote, .marginnote) {
   label.margin-toggle:not(.sidenote-number) {
     display: none;
   }
+}
 
-  .toc {
-    position: absolute;
-    inset-block: 0;
-    inset-inline-start: calc(-1 * var(--margin));
-    inline-size: 13rem;
+/* --- The foot ----------------------------------------------------------- */
+
+body > footer {
+  padding-block: 40px 60px;
+  color: var(--muted);
+
+  & p {
     margin: 0;
-
-    & nav {
-      position: sticky;
-      inset-block-start: 2rem;
-    }
+    padding-block-start: 20px;
+    border-block-start: 1px solid var(--line);
   }
 }
 
+@media (width < 36rem) {
+  .masthead {
+    padding-block-start: 48px;
+  }
+
+  .wordmark {
+    font-size: 2.5rem;
+  }
+
+  dl {
+    grid-template-columns: 1fr;
+  }
+
+  dd {
+    margin-block-end: 8px;
+  }
+}
+
+/* For screen readers only. */
 .visually-hidden {
   position: absolute;
   inline-size: 1px;
