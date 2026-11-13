@@ -119,10 +119,11 @@ dark side following the system.
 `<!-- letterboxd -->` in a page becomes the ten newest films from the
 public Letterboxd diary of `letterboxdUser` (in `letterboxd.go`), read
 from its RSS feed at build time: poster, title, year, stars, ♥ for a
-like and "again" for a rewatch. The posters are copied into
-`public/films/`, so visitors never load anything from Letterboxd. If
-the feed can't be read, the build carries on and the section is a plain
-link to the diary.
+like and "again" for a rewatch. Each links to the film's own page on
+Letterboxd, not the diary entry, so the account's name isn't shown. The
+posters are copied into `public/films/`, so visitors never load anything
+from Letterboxd. If the feed can't be read, the build carries on and the
+section says there's nothing to show.
 
 ## Deploy
 

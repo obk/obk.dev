@@ -71,7 +71,7 @@ var (
 	posterSize = regexp.MustCompile(`-0-\d+-0-\d+-crop`)
 
 	filmList = template.Must(template.New("films").Parse(`<ul class="films">
-{{range .}}<li><a href="{{.Link}}">{{with .Poster}}<img src="{{.}}" alt="" width="115" height="172" loading="lazy">{{end}}<span class="film-title">{{.Title}}</span></a>
+{{range .}}<li><a{{with .Link}} href="{{.}}"{{end}}>{{with .Poster}}<img src="{{.}}" alt="" width="115" height="172" loading="lazy">{{end}}<span class="film-title">{{.Title}}</span></a>
 <span class="film-meta">{{.Year}}{{with .Stars}} · {{.}}{{end}}{{if eq .Like "Yes"}} · ♥{{end}}{{if eq .Rewatch "Yes"}} · again{{end}}{{with .Day}}<br>{{.}}{{end}}</span></li>
 {{end}}</ul>
 `))
@@ -82,7 +82,7 @@ var (
 // returns a plain link, so the build never fails for want of the network.
 func films(out string, n int) string {
 	profile := "https://letterboxd.com/" + letterboxdUser + "/"
-	fallback := fmt.Sprintf(`<p><a href="%s">my diary on letterboxd</a></p>`, profile)
+	fallback := "<p>none to show just now.</p>"
 
 	list, err := fetchFilms(profile+"rss/", n)
 	if err != nil {
@@ -96,13 +96,10 @@ func films(out string, n int) string {
 	}
 	for i := range list {
 		m := posterSrc.FindStringSubmatch(list[i].Desc)
-		if m == nil {
+		if m == nil || list[i].Link == "" {
 			continue
 		}
 		name := path.Base(strings.TrimSuffix(list[i].Link, "/")) + ".jpg"
-		if m := filmSlug.FindStringSubmatch(list[i].Link); m != nil {
-			name = m[1] + ".jpg"
-		}
 		src := posterSize.ReplaceAllString(m[1], "-0-230-0-345-crop")
 		if err := download(src, filepath.Join(dir, name)); err != nil {
 			fmt.Fprintln(os.Stderr, "letterboxd: poster:", err)
@@ -133,6 +130,13 @@ func fetchFilms(url string, n int) ([]film, error) {
 	for _, f := range feed.Items {
 		if f.Title == "" { // lists and reviews of lists carry no film
 			continue
+		}
+		// Link the film's own page, not the diary entry, which would
+		// carry the account's name.
+		if m := filmSlug.FindStringSubmatch(f.Link); m != nil {
+			f.Link = "https://letterboxd.com/film/" + m[1] + "/"
+		} else {
+			f.Link = ""
 		}
 		list = append(list, f)
 		if len(list) == n {
