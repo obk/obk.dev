@@ -135,6 +135,32 @@ a {
   }
 }
 
+/* The background behind everything: five by five cells, blurred into
+   one another. A cell takes a colour while the pointer is over it, then
+   fades back to the paper. Made by the script at the foot of the page. */
+.glow {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  filter: blur(10px);
+  transform: scale(1.05); /* hides the blur's soft edge */
+  pointer-events: none;
+
+  & div {
+    background: var(--bg);
+    transition: background 0.8s linear;
+  }
+
+  & .lit {
+    /* Soft tints, close to the paper: oklch keeps every hue equally
+       quiet, where hsl's yellows and cyans glare. */
+    background: light-dark(oklch(90% 0.045 var(--hue)), oklch(27% 0.035 var(--hue)));
+    transition-duration: 10ms;
+  }
+}
+
 /* --- The name at the top ------------------------------------------------ */
 
 /* The banner behind the name: a short loop, scaled up with its pixels

@@ -68,5 +68,57 @@ if (links.length) {
   mark();
 }
 </script>
+<script>
+// The background: a blurred five by five grid whose cells take a colour
+// as the pointer passes over them, then fade back. Touches paint too.
+const grid = document.createElement("div");
+grid.className = "glow";
+grid.setAttribute("aria-hidden", "true");
+for (let i = 0; i < 25; i++) grid.append(document.createElement("div"));
+document.body.prepend(grid);
+
+const cellAt = (x, y) => {
+  const row = Math.floor((y * 5) / innerHeight), col = Math.floor((x * 5) / innerWidth);
+  return row >= 0 && row < 5 && col >= 0 && col < 5 ? grid.children[row * 5 + col] : null;
+};
+const pointers = new Map();
+const held = (cell) => [...pointers.values()].some((p) => p.cell === cell);
+let hue = Math.random() * 360;
+const light = (cell) => {
+  if (!cell || cell.classList.contains("lit")) return;
+  hue = (hue + 12 + Math.random() * 16) % 360;
+  cell.style.setProperty("--hue", hue);
+  cell.classList.add("lit");
+};
+const release = (cell) => { if (cell && !held(cell)) cell.classList.remove("lit"); };
+const move = (id, x, y) => {
+  const p = pointers.get(id) ?? { x, y, cell: null };
+  const cell = cellAt(x, y);
+  // A fast pointer skips cells between two events: flash those as well.
+  const steps = Math.ceil(Math.hypot(x - p.x, y - p.y) / 8);
+  for (let s = 1; s < steps; s++) {
+    const c = cellAt(p.x + ((x - p.x) * s) / steps, p.y + ((y - p.y) * s) / steps);
+    if (!c || c === p.cell || c === cell || c.classList.contains("lit")) continue;
+    light(c);
+    requestAnimationFrame(() => requestAnimationFrame(() => release(c)));
+  }
+  const previous = p.cell;
+  Object.assign(p, { x, y, cell });
+  pointers.set(id, p);
+  light(cell);
+  if (previous !== cell) release(previous);
+};
+const leave = (id) => {
+  const p = pointers.get(id);
+  pointers.delete(id);
+  if (p) release(p.cell);
+};
+addEventListener("pointermove", (e) => { if (e.pointerType !== "touch") move("mouse", e.clientX, e.clientY); }, { passive: true });
+document.documentElement.addEventListener("mouseleave", () => leave("mouse"));
+for (const type of ["touchstart", "touchmove"])
+  addEventListener(type, (e) => { for (const t of e.changedTouches) move(t.identifier, t.clientX, t.clientY); }, { passive: true });
+for (const type of ["touchend", "touchcancel"])
+  addEventListener(type, (e) => { for (const t of e.changedTouches) leave(t.identifier); }, { passive: true });
+</script>
 </body>
 </html>
